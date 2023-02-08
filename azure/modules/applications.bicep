@@ -51,7 +51,7 @@ resource adminAppService 'Microsoft.Web/sites@2022-03-01' = {
     serverFarmId: appServicePlan.id
     siteConfig: {
       vnetRouteAllEnabled: true
-      alwaysOn: true
+      alwaysOn: appServicesSku[environment].name == 'F1' ? false : true
       linuxFxVersion: 'DOTNETCORE|7.0'
       appSettings: [
         {
