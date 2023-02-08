@@ -6,7 +6,7 @@ param location string
 @description('Short resource group location name with limited characters')
 param shortLocation string
 
-@minLength(3)
+@minLength(2)
 param environment string
 
 @minLength(2)
@@ -20,11 +20,14 @@ param adminDbSecretUri string
 @secure()
 param serviceBusSecretUri string
 
+@description('App plan SKU')
+param appServicesSku object
+
 resource appServicePlan 'Microsoft.Web/serverfarms@2022-03-01' = {
   name: 'plan-${projectName}-${environment}-${shortLocation}'
   location: location
   sku: {
-    name: 'F1'
+    name: appServicesSku[environment].name
   }
   properties: {
     reserved: true

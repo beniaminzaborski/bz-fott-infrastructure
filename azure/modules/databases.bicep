@@ -6,7 +6,7 @@ param location string
 @description('Short resource group location name with limited characters')
 param shortLocation string
 
-@minLength(3)
+@minLength(2)
 param environment string
 
 @minLength(2)

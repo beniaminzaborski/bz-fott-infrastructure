@@ -12,8 +12,27 @@ param dbAdminLogin string = 'postgres'
 @secure()
 param dbAdminPassword string
 
-var environment = 'dev'
+@description('Environment name')
+@minLength(3)
+@allowed(['dev', 'qa', 'stg', 'prd'])
+param environment string
+
 var createdBy = 'Beniamin'
+
+var appServicesSku = {
+  dev: {
+    name: 'F1'
+  }
+  qa: {
+    name: 'B1'
+  }
+  stg: {
+    name: 'P1V2'
+  }
+  prod: {
+    name: 'P1V2'
+  }
+}
 
 module vaults 'modules/vaults.bicep' = {
   name: 'vaultModule'
@@ -77,7 +96,8 @@ module applications 'modules/applications.bicep' = {
     createdBy: createdBy
     appInsightsInstumentationKey: observability.outputs.instrumentationKey
     adminDbSecretUri: databases.outputs.adminConnStringSecretUri
-    serviceBusSecretUri: messaging.outputs.serviceBusConnStringSecretUri    
+    serviceBusSecretUri: messaging.outputs.serviceBusConnStringSecretUri
+    appServicesSku: appServicesSku   
   }
   dependsOn: [
     vaults
