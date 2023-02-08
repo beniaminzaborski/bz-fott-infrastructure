@@ -1,0 +1,1 @@
+az ad sp create-for-rbac --name "fott-github-actions-sp" --sdk-auth --role contributor --scopes /subscriptions/{subscriptions-id}
