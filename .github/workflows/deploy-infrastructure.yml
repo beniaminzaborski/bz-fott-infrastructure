@@ -1,4 +1,5 @@
 name: Deploy Azure infrastructure from Bicep
+
 on:
   workflow_dispatch:
     inputs:
@@ -6,10 +7,7 @@ on:
         description: 'Environment name. Allowed values: dev, qa, stg, prod'
         required: true
         default: 'dev'
-  push:
-    paths:
-    - 'azure/**/*'
-   
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest

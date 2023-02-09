@@ -94,7 +94,7 @@ module applications 'modules/applications.bicep' = {
     projectName: projectName
     environment: environment
     createdBy: createdBy
-    appInsightsInstumentationKey: observability.outputs.instrumentationKey
+    appInsightsSecretUri: observability.outputs.appInsightsSecretUri
     adminDbSecretUri: databases.outputs.adminConnStringSecretUri
     serviceBusSecretUri: messaging.outputs.serviceBusConnStringSecretUri
     appServicesSku: appServicesSku   

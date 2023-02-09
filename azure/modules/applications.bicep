@@ -12,7 +12,7 @@ param environment string
 @minLength(2)
 param createdBy string
 
-param appInsightsInstumentationKey string
+param appInsightsSecretUri string
 
 @secure()
 param adminDbSecretUri string
@@ -59,16 +59,16 @@ resource adminAppService 'Microsoft.Web/sites@2022-03-01' = {
           value: 'Development'
         }
         {
-          name: 'ApplicationInsights__InstrumentationKey'
-          value: appInsightsInstumentationKey
-        }
-        {
-          name: 'ConnectionStrings__Administration'
+          name: 'ConnectionStrings__Postgres'
           value: '@Microsoft.KeyVault(SecretUri=${adminDbSecretUri})'
         }
         {
-          name: 'AzureServiceBus__ConnectionString'
+          name: 'ConnectionStrings__AzureServiceBus'
           value: '@Microsoft.KeyVault(SecretUri=${serviceBusSecretUri})'
+        }
+        {
+          name: 'ConnectionStrings__ApplicationInsights'
+          value: '@Microsoft.KeyVault(SecretUri=${appInsightsSecretUri})'
         }
       ]
     }
