@@ -15,7 +15,7 @@ param createdBy string
 param appInsightsSecretUri string
 
 @secure()
-param adminDbSecretUri string
+param databaseSecretUri string
 
 @secure()
 param serviceBusSecretUri string
@@ -60,7 +60,7 @@ resource adminAppService 'Microsoft.Web/sites@2022-03-01' = {
         }
         {
           name: 'ConnectionStrings__Postgres'
-          value: '@Microsoft.KeyVault(SecretUri=${adminDbSecretUri})'
+          value: '@Microsoft.KeyVault(SecretUri=${databaseSecretUri})'
         }
         {
           name: 'ConnectionStrings__AzureServiceBus'

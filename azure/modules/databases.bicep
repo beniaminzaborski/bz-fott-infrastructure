@@ -53,11 +53,11 @@ resource adminDB 'Microsoft.DBforPostgreSQL/servers/databases@2017-12-01' = {
   parent: postgres
 }
 
-resource keyVaultSecretAdmin 'Microsoft.KeyVault/vaults/secrets@2022-07-01' = {
-  name: 'kv-${projectName}-${environment}-${shortLocation}/ConnectionString-Fott-Administration'
+resource keyVaultSecretPostgres 'Microsoft.KeyVault/vaults/secrets@2022-07-01' = {
+  name: 'kv-${projectName}-${environment}-${shortLocation}/ConnectionString-Fott-Postgres'
   properties: {
     value: 'Server=${postgres.name}.postgres.database.azure.com;Database=${adminDB.name};Port=5432;Ssl Mode=Require;Trust Server Certificate=true;User Id=${dbAdminLogin}@${postgres.name};Password=${dbAdminPassword};'
   }
 }
 
-output adminConnStringSecretUri string = keyVaultSecretAdmin.properties.secretUri
+output databaseSecretUri string = keyVaultSecretPostgres.properties.secretUri
