@@ -96,7 +96,7 @@ module applications 'modules/applications.bicep' = {
     createdBy: createdBy
     appInsightsSecretUri: observability.outputs.appInsightsSecretUri
     databaseSecretUri: databases.outputs.databaseSecretUri
-    serviceBusSecretUri: messaging.outputs.serviceBusConnStringSecretUri
+    serviceBusSecretUri: messaging.outputs.serviceBusSecretUri
     appServicesSku: appServicesSku   
   }
   dependsOn: [

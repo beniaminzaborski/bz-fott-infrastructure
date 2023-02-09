@@ -38,10 +38,10 @@ var serviceBusNamespaceAuthRuleEndpoint = '${serviceBusNamespace.id}/Authorizati
 var serviceBusConnString = listKeys(serviceBusNamespaceAuthRuleEndpoint, serviceBusNamespace.apiVersion).primaryConnectionString
 
 resource serviceBusSecretConnString 'Microsoft.KeyVault/vaults/secrets@2019-09-01' = {
-  name: 'kv-${projectName}-${environment}-${shortLocation}/ServiceBusConnectionString'
+  name: 'kv-${projectName}-${environment}-${shortLocation}/ConnectionString-Fott-ServiceBus'
   properties: {
     value: serviceBusConnString
   }
 }
 
-output serviceBusConnStringSecretUri string = serviceBusSecretConnString.properties.secretUri
+output serviceBusSecretUri string = serviceBusSecretConnString.properties.secretUri
