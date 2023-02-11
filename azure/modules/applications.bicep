@@ -15,7 +15,10 @@ param createdBy string
 param appInsightsSecretUri string
 
 @secure()
-param databaseSecretUri string
+param adminDbSecretUri string
+
+@secure()
+param registrDbSecretUri string
 
 @secure()
 param serviceBusSecretUri string
@@ -60,7 +63,47 @@ resource adminAppService 'Microsoft.Web/sites@2022-03-01' = {
         }
         {
           name: 'ConnectionStrings__Postgres'
-          value: '@Microsoft.KeyVault(SecretUri=${databaseSecretUri})'
+          value: '@Microsoft.KeyVault(SecretUri=${adminDbSecretUri})'
+        }
+        {
+          name: 'ConnectionStrings__AzureServiceBus'
+          value: '@Microsoft.KeyVault(SecretUri=${serviceBusSecretUri})'
+        }
+        {
+          name: 'ConnectionStrings__ApplicationInsights'
+          value: '@Microsoft.KeyVault(SecretUri=${appInsightsSecretUri})'
+        }
+      ]
+    }
+  }
+  tags: {
+    environment: environment
+    createdBy: createdBy
+  }
+}
+
+resource registrAppService 'Microsoft.Web/sites@2022-03-01' = {
+  name: 'app-${projectName}-registration-${environment}-${shortLocation}'
+  location: location
+  identity: {
+    type: 'SystemAssigned'
+  }
+  kind: 'app'
+  properties: {
+    enabled: true
+    serverFarmId: appServicePlan.id
+    siteConfig: {
+      vnetRouteAllEnabled: true
+      alwaysOn: appServicesSku[environment].name == 'F1' ? false : true
+      linuxFxVersion: 'DOTNETCORE|7.0'
+      appSettings: [
+        {
+          name: 'ASPNETCORE_ENVIRONMENT'
+          value: 'Development'
+        }
+        {
+          name: 'ConnectionStrings__Postgres'
+          value: '@Microsoft.KeyVault(SecretUri=${registrDbSecretUri})'
         }
         {
           name: 'ConnectionStrings__AzureServiceBus'
@@ -92,6 +135,15 @@ resource vaultAccessPolicy 'Microsoft.KeyVault/vaults/accessPolicies@2022-07-01'
         }
         tenantId: subscription().tenantId
       }
+      {
+        objectId: registrAppService.identity.principalId
+        permissions: {
+          secrets: [
+            'get'
+          ]
+        }
+        tenantId: subscription().tenantId
+      }      
     ]
   }
 }

@@ -95,7 +95,8 @@ module applications 'modules/applications.bicep' = {
     environment: environment
     createdBy: createdBy
     appInsightsSecretUri: observability.outputs.appInsightsSecretUri
-    databaseSecretUri: databases.outputs.databaseSecretUri
+    adminDbSecretUri: databases.outputs.adminDbSecretUri
+    registrDbSecretUri: databases.outputs.registrDbSecretUri
     serviceBusSecretUri: messaging.outputs.serviceBusSecretUri
     appServicesSku: appServicesSku   
   }
