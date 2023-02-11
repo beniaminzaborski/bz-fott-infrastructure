@@ -146,6 +146,9 @@ resource numberAssignatorFuncApp 'Microsoft.Web/sites@2022-03-01' = {
   name: 'func-${projectName}-registration-${environment}-${shortLocation}'
   location: location
   kind: 'functionapp'
+  identity: {
+    type: 'SystemAssigned'
+  }
   properties: {
     serverFarmId: appfunctionPlan.id
     siteConfig: {
