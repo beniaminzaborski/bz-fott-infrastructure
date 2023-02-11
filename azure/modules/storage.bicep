@@ -26,7 +26,7 @@ resource storageAccount 'Microsoft.Storage/storageAccounts@2022-09-01' = {
 }
 
 resource blobStorageConnectionString 'Microsoft.KeyVault/vaults/secrets@2022-07-01' = {
-  name: 'kv-${projectName}-${environment}-${shortLocation}/BlobStorageConnectionString'
+  name: 'kv-${projectName}-${environment}-${shortLocation}/ConnectionString-Fott-BlobStorage'
   properties: {
     value: 'DefaultEndpointsProtocol=https;AccountName=${storageAccount.name};EndpointSuffix=${az.environment().suffixes.storage};AccountKey=${listKeys(storageAccount.id, storageAccount.apiVersion).keys[0].value}'
   }
