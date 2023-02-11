@@ -54,6 +54,9 @@ module observability 'modules/observability.bicep' = {
     environment: environment
     createdBy: createdBy
   }
+  dependsOn: [
+    vaults
+  ]   
 }
 
 module databases 'modules/databases.bicep' = {
@@ -86,6 +89,20 @@ module messaging 'modules/messaging.bicep' = {
   ]  
 }
 
+module storage 'modules/storage.bicep' = {
+  name: 'storageModule'
+  params: {
+    location: location
+    shortLocation: shortLocation
+    projectName: projectName
+    environment: environment
+    createdBy: createdBy
+  }
+  dependsOn: [
+    vaults
+  ]  
+}
+
 module applications 'modules/applications.bicep' = {
   name: 'applicationModule'
   params: {
@@ -98,12 +115,14 @@ module applications 'modules/applications.bicep' = {
     adminDbSecretUri: databases.outputs.adminDbSecretUri
     registrDbSecretUri: databases.outputs.registrDbSecretUri
     serviceBusSecretUri: messaging.outputs.serviceBusSecretUri
-    appServicesSku: appServicesSku   
+    blobStorageSecretUri: storage.outputs.blobStorageSecretUri
+    appServicesSku: appServicesSku
   }
   dependsOn: [
     vaults
     databases
     messaging
     observability
+    storage
   ]  
 }

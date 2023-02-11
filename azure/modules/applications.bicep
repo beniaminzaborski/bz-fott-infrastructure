@@ -23,6 +23,9 @@ param registrDbSecretUri string
 @secure()
 param serviceBusSecretUri string
 
+@secure()
+param blobStorageSecretUri string
+
 @description('App plan SKU')
 param appServicesSku object
 
@@ -40,6 +43,23 @@ resource appServicePlan 'Microsoft.Web/serverfarms@2022-03-01' = {
     createdBy: createdBy
   }
   kind: 'linux'
+}
+
+resource appfunctionPlan 'Microsoft.Web/serverfarms@2022-03-01' = {
+  name: 'plan-${projectName}-registration-${environment}-${shortLocation}'
+  location: location
+  kind: 'functionapp'
+  sku: {
+    name: 'Y1'
+    tier: 'Dynamic'
+  }
+  properties: {
+    //reserved: true // on Linux
+  }
+  tags: {
+    environment: environment
+    createdBy: createdBy
+  }
 }
 
 resource adminAppService 'Microsoft.Web/sites@2022-03-01' = {
@@ -122,6 +142,47 @@ resource registrAppService 'Microsoft.Web/sites@2022-03-01' = {
   }
 }
 
+resource numberAssignatorFuncApp 'Microsoft.Web/sites@2022-03-01' = {
+  name: 'func-${projectName}-registration-${environment}-${shortLocation}'
+  location: location
+  kind: 'functionapp'
+  properties: {
+    serverFarmId: appfunctionPlan.id
+    siteConfig: {
+      appSettings: [
+        {
+          name: 'APPINSIGHTS_INSTRUMENTATIONKEY'
+          value: '@Microsoft.KeyVault(SecretUri=${appInsightsSecretUri})'
+        }
+        {
+          name: 'AzureWebJobsStorage'
+          value: '@Microsoft.KeyVault(SecretUri=${blobStorageSecretUri})'
+        }
+        {
+          name: 'FUNCTIONS_EXTENSION_VERSION'
+          value: '~4'
+        }
+        {
+          name: 'FUNCTIONS_WORKER_RUNTIME'
+          value: 'dotnet'
+        }
+        {
+          name: 'ServiceBusConnectionString'
+          value: '@Microsoft.KeyVault(SecretUri=${serviceBusSecretUri})'
+        }
+        // {
+        //   name: 'SignalRConnectionString'
+        //   value: signalRConnectionString
+        // }        
+      ]
+    }
+  }
+  tags: {
+    environment: environment
+    createdBy: createdBy
+  }
+}
+
 resource vaultAccessPolicy 'Microsoft.KeyVault/vaults/accessPolicies@2022-07-01' = {
   name: 'kv-${projectName}-${environment}-${shortLocation}/add'
   properties: {
@@ -143,7 +204,16 @@ resource vaultAccessPolicy 'Microsoft.KeyVault/vaults/accessPolicies@2022-07-01'
           ]
         }
         tenantId: subscription().tenantId
-      }      
+      }
+      {
+        objectId: numberAssignatorFuncApp.identity.principalId
+        permissions: {
+          secrets: [
+            'get'
+          ]
+        }
+        tenantId: subscription().tenantId
+      }           
     ]
   }
 }
