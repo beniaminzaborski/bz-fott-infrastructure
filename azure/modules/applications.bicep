@@ -173,10 +173,10 @@ resource numberAssignatorFuncApp 'Microsoft.Web/sites@2022-03-01' = {
           name: 'ServiceBusConnectionString'
           value: '@Microsoft.KeyVault(SecretUri=${serviceBusSecretUri})'
         }
-        // {
-        //   name: 'SignalRConnectionString'
-        //   value: signalRConnectionString
-        // }        
+        {
+          name: 'PostgresConnectionString'
+          value: '@Microsoft.KeyVault(SecretUri=${registrDbSecretUri})'
+        }
       ]
     }
   }
