@@ -24,7 +24,10 @@ param registrDbSecretUri string
 param serviceBusSecretUri string
 
 @secure()
-param blobStorageSecretUri string
+param storageAccountSecretUri string
+
+@secure()
+param signalrSecretUri string
 
 @description('App plan SKU')
 param appServicesSku object
@@ -46,7 +49,7 @@ resource appServicePlan 'Microsoft.Web/serverfarms@2022-03-01' = {
 }
 
 resource appfunctionPlan 'Microsoft.Web/serverfarms@2022-03-01' = {
-  name: 'plan-${projectName}-registration-${environment}-${shortLocation}'
+  name: 'plan-${projectName}-slregistration-${environment}-${shortLocation}'
   location: location
   kind: 'functionapp'
   sku: {
@@ -142,7 +145,7 @@ resource registrAppService 'Microsoft.Web/sites@2022-03-01' = {
   }
 }
 
-resource numberAssignatorFuncApp 'Microsoft.Web/sites@2022-03-01' = {
+resource registrFuncApp 'Microsoft.Web/sites@2022-03-01' = {
   name: 'func-${projectName}-registration-${environment}-${shortLocation}'
   location: location
   kind: 'functionapp'
@@ -159,7 +162,7 @@ resource numberAssignatorFuncApp 'Microsoft.Web/sites@2022-03-01' = {
         }
         {
           name: 'AzureWebJobsStorage'
-          value: '@Microsoft.KeyVault(SecretUri=${blobStorageSecretUri})'
+          value: '@Microsoft.KeyVault(SecretUri=${storageAccountSecretUri})'
         }
         {
           name: 'FUNCTIONS_EXTENSION_VERSION'
@@ -176,6 +179,10 @@ resource numberAssignatorFuncApp 'Microsoft.Web/sites@2022-03-01' = {
         {
           name: 'PostgresConnectionString'
           value: '@Microsoft.KeyVault(SecretUri=${registrDbSecretUri})'
+        }
+        {
+          name: 'SignalRConnectionString'
+          value: '@Microsoft.KeyVault(SecretUri=${signalrSecretUri})'
         }
       ]
     }
@@ -209,7 +216,7 @@ resource vaultAccessPolicy 'Microsoft.KeyVault/vaults/accessPolicies@2022-07-01'
         tenantId: subscription().tenantId
       }
       {
-        objectId: numberAssignatorFuncApp.identity.principalId
+        objectId: registrFuncApp.identity.principalId
         permissions: {
           secrets: [
             'get'

@@ -59,6 +59,20 @@ module observability 'modules/observability.bicep' = {
   ]   
 }
 
+module notification 'modules/notification.bicep' = {
+  name: 'notificationModule'
+  params: {
+    location: location
+    shortLocation: shortLocation
+    projectName: projectName
+    environment: environment
+    createdBy: createdBy
+  }
+  dependsOn: [
+    vaults
+  ]  
+}
+
 module databases 'modules/databases.bicep' = {
   name: 'databaseModule'
   params: {
@@ -115,7 +129,8 @@ module applications 'modules/applications.bicep' = {
     adminDbSecretUri: databases.outputs.adminDbSecretUri
     registrDbSecretUri: databases.outputs.registrDbSecretUri
     serviceBusSecretUri: messaging.outputs.serviceBusSecretUri
-    blobStorageSecretUri: storage.outputs.blobStorageSecretUri
+    storageAccountSecretUri: storage.outputs.storageAccountSecretUri
+    signalrSecretUri: notification.outputs.signalrSecretUri
     appServicesSku: appServicesSku
   }
   dependsOn: [
