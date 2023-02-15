@@ -130,7 +130,7 @@ module applications 'modules/applications.bicep' = {
     adminDbSecretUri: databases.outputs.adminDbSecretUri
     registrDbSecretUri: databases.outputs.registrDbSecretUri
     serviceBusSecretUri: messaging.outputs.serviceBusSecretUri
-    storageAccountSecretUri: storage.outputs.storageAccountSecretUri
+    //storageAccountSecretUri: storage.outputs.storageAccountSecretUri
     signalrSecretUri: notification.outputs.signalrSecretUri
     appServicesSku: appServicesSku
   }

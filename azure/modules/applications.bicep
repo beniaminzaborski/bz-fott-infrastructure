@@ -26,8 +26,8 @@ param registrDbSecretUri string
 @secure()
 param serviceBusSecretUri string
 
-@secure()
-param storageAccountSecretUri string
+// @secure()
+// param storageAccountSecretUri string
 
 @secure()
 param signalrSecretUri string
