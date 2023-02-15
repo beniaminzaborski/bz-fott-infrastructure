@@ -37,11 +37,11 @@ resource serviceBusNamespace 'Microsoft.ServiceBus/namespaces@2021-11-01' = {
 var serviceBusNamespaceAuthRuleEndpoint = '${serviceBusNamespace.id}/AuthorizationRules/RootManageSharedAccessKey'
 var serviceBusConnString = listKeys(serviceBusNamespaceAuthRuleEndpoint, serviceBusNamespace.apiVersion).primaryConnectionString
 
-resource serviceBusSecretConnString 'Microsoft.KeyVault/vaults/secrets@2019-09-01' = {
+resource kvServiceBusConnString 'Microsoft.KeyVault/vaults/secrets@2019-09-01' = {
   name: 'kv-${projectName}-${environment}-${shortLocation}/ConnectionString-Fott-ServiceBus'
   properties: {
     value: serviceBusConnString
   }
 }
 
-output serviceBusSecretUri string = serviceBusSecretConnString.properties.secretUri
+output serviceBusSecretUri string = kvServiceBusConnString.properties.secretUri

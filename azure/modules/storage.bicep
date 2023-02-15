@@ -25,11 +25,11 @@ resource storageAccount 'Microsoft.Storage/storageAccounts@2022-09-01' = {
   }
 }
 
-resource storageAccountConnString 'Microsoft.KeyVault/vaults/secrets@2022-07-01' = {
+resource kvStorageAccountConnString 'Microsoft.KeyVault/vaults/secrets@2022-07-01' = {
   name: 'kv-${projectName}-${environment}-${shortLocation}/ConnectionString-Fott-StorageAccount'
   properties: {
     value: 'DefaultEndpointsProtocol=https;AccountName=${storageAccount.name};EndpointSuffix=${az.environment().suffixes.storage};AccountKey=${listKeys(storageAccount.id, storageAccount.apiVersion).keys[0].value}'
   }
 }
 
-output storageAccountSecretUri string = storageAccountConnString.properties.secretUri
+output storageAccountSecretUri string = kvStorageAccountConnString.properties.secretUri

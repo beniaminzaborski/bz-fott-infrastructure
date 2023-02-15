@@ -12,7 +12,10 @@ param environment string
 @minLength(2)
 param createdBy string
 
+@secure()
 param appInsightsSecretUri string
+
+param appInsightsInstrumentationKey string
 
 @secure()
 param adminDbSecretUri string
@@ -145,6 +148,20 @@ resource registrAppService 'Microsoft.Web/sites@2022-03-01' = {
   }
 }
 
+// Dedicated Strorage Account for Azure Function App
+resource storageAccountRegistrFuncApp 'Microsoft.Storage/storageAccounts@2022-09-01' = {
+  name: 'st${projectName}funcregistr${environment}${shortLocation}'
+  location: location
+  kind: 'Storage'
+  sku: {
+    name: 'Standard_LRS'
+  }
+  tags: {
+    environment: environment
+    createdBy: createdBy
+  }
+}
+
 resource registrFuncApp 'Microsoft.Web/sites@2022-03-01' = {
   name: 'func-${projectName}-registration-${environment}-${shortLocation}'
   location: location
@@ -158,11 +175,13 @@ resource registrFuncApp 'Microsoft.Web/sites@2022-03-01' = {
       appSettings: [
         {
           name: 'APPINSIGHTS_INSTRUMENTATIONKEY'
-          value: '@Microsoft.KeyVault(SecretUri=${appInsightsSecretUri})'
+          //value: '@Microsoft.KeyVault(SecretUri=${appInsightsSecretUri})'
+          value: appInsightsInstrumentationKey
         }
         {
           name: 'AzureWebJobsStorage'
-          value: '@Microsoft.KeyVault(SecretUri=${storageAccountSecretUri})'
+          //value: '@Microsoft.KeyVault(SecretUri=${storageAccountSecretUri})'
+          value: 'DefaultEndpointsProtocol=https;AccountName=${storageAccountRegistrFuncApp.name};EndpointSuffix=${az.environment().suffixes.storage};AccountKey=${listKeys(storageAccountRegistrFuncApp.id, storageAccountRegistrFuncApp.apiVersion).keys[0].value}'
         }
         {
           name: 'FUNCTIONS_EXTENSION_VERSION'
