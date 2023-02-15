@@ -150,7 +150,7 @@ resource registrAppService 'Microsoft.Web/sites@2022-03-01' = {
 
 // Dedicated Strorage Account for Azure Function App
 resource storageAccountRegistrFuncApp 'Microsoft.Storage/storageAccounts@2022-09-01' = {
-  name: 'st${projectName}funcregistr${environment}${shortLocation}'
+  name: 'st${projectName}fregistr${environment}${shortLocation}'
   location: location
   kind: 'Storage'
   sku: {
