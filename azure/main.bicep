@@ -54,9 +54,6 @@ module observability 'modules/observability.bicep' = {
     environment: environment
     createdBy: createdBy
   }
-  dependsOn: [
-    vaults
-  ]   
 }
 
 module notification 'modules/notification.bicep' = {
@@ -125,7 +122,6 @@ module applications 'modules/applications.bicep' = {
     projectName: projectName
     environment: environment
     createdBy: createdBy
-    appInsightsSecretUri: observability.outputs.appInsightsSecretUri
     appInsightsInstrumentationKey: observability.outputs.instrumentationKey
     adminDbSecretUri: databases.outputs.adminDbSecretUri
     registrDbSecretUri: databases.outputs.registrDbSecretUri

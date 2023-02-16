@@ -12,9 +12,6 @@ param environment string
 @minLength(2)
 param createdBy string
 
-@secure()
-param appInsightsSecretUri string
-
 param appInsightsInstrumentationKey string
 
 @secure()
@@ -97,7 +94,7 @@ resource adminAppService 'Microsoft.Web/sites@2022-03-01' = {
         }
         {
           name: 'ConnectionStrings__ApplicationInsights'
-          value: '@Microsoft.KeyVault(SecretUri=${appInsightsSecretUri})'
+          value: appInsightsInstrumentationKey
         }
       ]
     }
@@ -137,7 +134,7 @@ resource registrAppService 'Microsoft.Web/sites@2022-03-01' = {
         }
         {
           name: 'ConnectionStrings__ApplicationInsights'
-          value: '@Microsoft.KeyVault(SecretUri=${appInsightsSecretUri})'
+          value: appInsightsInstrumentationKey
         }
       ]
     }
