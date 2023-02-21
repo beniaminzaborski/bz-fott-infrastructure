@@ -13,7 +13,7 @@ param dbAdminLogin string = 'postgres'
 param dbAdminPassword string
 
 @description('Environment name')
-@minLength(3)
+@minLength(2)
 @allowed(['dev', 'qa', 'stg', 'prd'])
 param environment string
 
@@ -117,8 +117,30 @@ module storage 'modules/storage.bicep' = {
   ]  
 }
 
-module applications 'modules/applications.bicep' = {
-  name: 'applicationModule'
+module appAdmin 'modules/app-admin.bicep' = {
+  name: 'appAdminModule'
+  params: {
+    location: location
+    shortLocation: shortLocation
+    projectName: projectName
+    environment: environment
+    createdBy: createdBy
+    appInsightsSecretUri: observability.outputs.appInsightsSecretUri
+    adminDbSecretUri: databases.outputs.adminDbSecretUri
+    serviceBusSecretUri: messaging.outputs.serviceBusSecretUri
+    appServicesSku: appServicesSku
+  }
+  dependsOn: [
+    vaults
+    databases
+    messaging
+    observability
+    storage
+  ]  
+}
+
+module appRegistr 'modules/app-registr.bicep' = {
+  name: 'appRegistrModule'
   params: {
     location: location
     shortLocation: shortLocation
@@ -127,10 +149,8 @@ module applications 'modules/applications.bicep' = {
     createdBy: createdBy
     appInsightsSecretUri: observability.outputs.appInsightsSecretUri
     appInsightsInstrumentationKey: observability.outputs.instrumentationKey
-    adminDbSecretUri: databases.outputs.adminDbSecretUri
     registrDbSecretUri: databases.outputs.registrDbSecretUri
     serviceBusSecretUri: messaging.outputs.serviceBusSecretUri
-    //storageAccountSecretUri: storage.outputs.storageAccountSecretUri
     signalrSecretUri: notification.outputs.signalrSecretUri
     appServicesSku: appServicesSku
   }

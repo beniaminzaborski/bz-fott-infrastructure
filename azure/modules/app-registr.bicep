@@ -18,16 +18,10 @@ param appInsightsSecretUri string
 param appInsightsInstrumentationKey string
 
 @secure()
-param adminDbSecretUri string
-
-@secure()
 param registrDbSecretUri string
 
 @secure()
 param serviceBusSecretUri string
-
-// @secure()
-// param storageAccountSecretUri string
 
 @secure()
 param signalrSecretUri string
@@ -35,8 +29,8 @@ param signalrSecretUri string
 @description('App plan SKU')
 param appServicesSku object
 
-resource appServicePlan 'Microsoft.Web/serverfarms@2022-03-01' = {
-  name: 'plan-${projectName}-${environment}-${shortLocation}'
+resource registrAppPlan 'Microsoft.Web/serverfarms@2022-03-01' = {
+  name: 'plan-${projectName}-registr-${environment}-${shortLocation}'
   location: location
   sku: {
     name: appServicesSku[environment].name
@@ -51,8 +45,8 @@ resource appServicePlan 'Microsoft.Web/serverfarms@2022-03-01' = {
   kind: 'linux'
 }
 
-resource appfunctionPlan 'Microsoft.Web/serverfarms@2022-03-01' = {
-  name: 'plan-${projectName}-slregistration-${environment}-${shortLocation}'
+resource registrSrvLessAppPlan 'Microsoft.Web/serverfarms@2022-03-01' = {
+  name: 'plan-${projectName}-slregistr-${environment}-${shortLocation}'
   location: location
   kind: 'functionapp'
   sku: {
@@ -61,46 +55,6 @@ resource appfunctionPlan 'Microsoft.Web/serverfarms@2022-03-01' = {
   }
   properties: {
     //reserved: true // on Linux
-  }
-  tags: {
-    environment: environment
-    createdBy: createdBy
-  }
-}
-
-resource adminAppService 'Microsoft.Web/sites@2022-03-01' = {
-  name: 'app-${projectName}-administration-${environment}-${shortLocation}'
-  location: location
-  identity: {
-    type: 'SystemAssigned'
-  }
-  kind: 'app'
-  properties: {
-    enabled: true
-    serverFarmId: appServicePlan.id
-    siteConfig: {
-      vnetRouteAllEnabled: true
-      alwaysOn: appServicesSku[environment].name == 'F1' ? false : true
-      linuxFxVersion: 'DOTNETCORE|7.0'
-      appSettings: [
-        {
-          name: 'ASPNETCORE_ENVIRONMENT'
-          value: 'Development'
-        }
-        {
-          name: 'ConnectionStrings__Postgres'
-          value: '@Microsoft.KeyVault(SecretUri=${adminDbSecretUri})'
-        }
-        {
-          name: 'ConnectionStrings__AzureServiceBus'
-          value: '@Microsoft.KeyVault(SecretUri=${serviceBusSecretUri})'
-        }
-        {
-          name: 'ConnectionStrings__ApplicationInsights'
-          value: '@Microsoft.KeyVault(SecretUri=${appInsightsSecretUri})'
-        }
-      ]
-    }
   }
   tags: {
     environment: environment
@@ -117,7 +71,7 @@ resource registrAppService 'Microsoft.Web/sites@2022-03-01' = {
   kind: 'app'
   properties: {
     enabled: true
-    serverFarmId: appServicePlan.id
+    serverFarmId: registrAppPlan.id
     siteConfig: {
       vnetRouteAllEnabled: true
       alwaysOn: appServicesSku[environment].name == 'F1' ? false : true
@@ -170,12 +124,11 @@ resource registrFuncApp 'Microsoft.Web/sites@2022-03-01' = {
     type: 'SystemAssigned'
   }
   properties: {
-    serverFarmId: appfunctionPlan.id
+    serverFarmId: registrSrvLessAppPlan.id
     siteConfig: {
       appSettings: [
         {
           name: 'APPINSIGHTS_INSTRUMENTATIONKEY'
-          //value: '@Microsoft.KeyVault(SecretUri=${appInsightsSecretUri})'
           value: appInsightsInstrumentationKey
         }
         {
@@ -216,15 +169,6 @@ resource vaultAccessPolicy 'Microsoft.KeyVault/vaults/accessPolicies@2022-07-01'
   name: 'kv-${projectName}-${environment}-${shortLocation}/add'
   properties: {
     accessPolicies: [
-      {
-        objectId: adminAppService.identity.principalId
-        permissions: {
-          secrets: [
-            'get'
-          ]
-        }
-        tenantId: subscription().tenantId
-      }
       {
         objectId: registrAppService.identity.principalId
         permissions: {
