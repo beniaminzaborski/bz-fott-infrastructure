@@ -162,3 +162,26 @@ module appRegistr 'modules/app-registr.bicep' = {
     storage
   ]  
 }
+
+module appTelemtr 'modules/app-telemtr.bicep' = {
+  name: 'appTelemtrModule'
+  params: {
+    location: location
+    shortLocation: shortLocation
+    projectName: projectName
+    environment: environment
+    createdBy: createdBy
+    appInsightsInstrumentationKey: observability.outputs.instrumentationKey
+    telemtrDbSecretUri: databases.outputs.telemtrDbSecretUri
+    eventHubSecretUri: messaging.outputs.eventHubSecretUri
+    serviceBusSecretUri: messaging.outputs.serviceBusSecretUri
+    signalrSecretUri: notification.outputs.signalrSecretUri
+  }
+  dependsOn: [
+    vaults
+    databases
+    messaging
+    observability
+    storage
+  ]
+}

@@ -63,7 +63,7 @@ resource registrSrvLessAppPlan 'Microsoft.Web/serverfarms@2022-03-01' = {
 }
 
 resource registrAppService 'Microsoft.Web/sites@2022-03-01' = {
-  name: 'app-${projectName}-registration-${environment}-${shortLocation}'
+  name: 'app-${projectName}-registr-${environment}-${shortLocation}'
   location: location
   identity: {
     type: 'SystemAssigned'
@@ -117,7 +117,7 @@ resource storageAccountRegistrFuncApp 'Microsoft.Storage/storageAccounts@2022-09
 }
 
 resource registrFuncApp 'Microsoft.Web/sites@2022-03-01' = {
-  name: 'func-${projectName}-registration-${environment}-${shortLocation}'
+  name: 'func-${projectName}-registr-${environment}-${shortLocation}'
   location: location
   kind: 'functionapp'
   identity: {

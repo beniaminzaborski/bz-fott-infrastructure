@@ -18,6 +18,7 @@ param dbAdminLogin string
 @secure()
 param dbAdminPassword string
 
+/* PostgreSQL */
 resource postgres 'Microsoft.DBforPostgreSQL/servers@2017-12-01' = {
   name: 'psql-${projectName}-${environment}-${shortLocation}'
   location: location
@@ -74,3 +75,49 @@ resource kvRegistrDbPostgresConnString 'Microsoft.KeyVault/vaults/secrets@2022-0
 
 output adminDbSecretUri string = kvAdminDbPostgresConnString.properties.secretUri
 output registrDbSecretUri string = kvRegistrDbPostgresConnString.properties.secretUri
+
+
+/* CosmosDB */
+var locations = [
+  {
+    locationName: location
+    failoverPriority: 0
+    isZoneRedundant: false
+  }
+  {
+    locationName: 'northeurope' //secondaryRegion
+    failoverPriority: 1
+    isZoneRedundant: false
+  }
+]
+
+resource cosmosDbAccount 'Microsoft.DocumentDB/databaseAccounts@2022-08-15' = {
+  name: 'cosacc-${projectName}-${environment}-${shortLocation}'
+  kind: 'MongoDB'
+  location: location
+  properties: {
+    //consistencyPolicy: consistencyPolicy['Eventual']
+    locations: locations
+    databaseAccountOfferType: 'Standard'
+    enableAutomaticFailover: false
+  }
+}
+
+resource cosmosDb 'Microsoft.DocumentDB/databaseAccounts/mongodbDatabases@2022-08-15' = {
+  name: 'fott_telemetry'
+  parent: cosmosDbAccount
+  properties: {
+    resource: {
+      id: 'fott_telemetry'
+    }
+  }
+}
+
+resource kvTelemtrDbComosConnString 'Microsoft.KeyVault/vaults/secrets@2022-07-01' = {
+  name: 'kv-${projectName}-${environment}-${shortLocation}/ConnectionString-Fott-Telemetry-Cosmos'
+  properties: {
+    value: cosmosDbAccount.listConnectionStrings().connectionStrings[0].connectionString
+  }
+}
+
+output telemtrDbSecretUri string = kvTelemtrDbComosConnString.properties.secretUri
