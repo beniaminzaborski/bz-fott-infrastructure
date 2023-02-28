@@ -18,6 +18,8 @@ param dbAdminLogin string
 @secure()
 param dbAdminPassword string
 
+param secondaryRegion string
+
 /* PostgreSQL */
 resource postgres 'Microsoft.DBforPostgreSQL/servers@2017-12-01' = {
   name: 'psql-${projectName}-${environment}-${shortLocation}'
@@ -85,7 +87,7 @@ var locations = [
     isZoneRedundant: false
   }
   {
-    locationName: 'northeurope' //secondaryRegion
+    locationName: secondaryRegion
     failoverPriority: 1
     isZoneRedundant: false
   }
@@ -93,17 +95,16 @@ var locations = [
 
 resource cosmosDbAccount 'Microsoft.DocumentDB/databaseAccounts@2022-08-15' = {
   name: 'cosacc-${projectName}-${environment}-${shortLocation}'
-  kind: 'MongoDB'
+  kind: 'GlobalDocumentDB'
   location: location
   properties: {
-    //consistencyPolicy: consistencyPolicy['Eventual']
     locations: locations
     databaseAccountOfferType: 'Standard'
     enableAutomaticFailover: false
   }
 }
 
-resource cosmosDb 'Microsoft.DocumentDB/databaseAccounts/mongodbDatabases@2022-08-15' = {
+resource cosmosDb 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases@2022-08-15' = {
   name: 'fott_telemetry'
   parent: cosmosDbAccount
   properties: {

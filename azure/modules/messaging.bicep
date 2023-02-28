@@ -25,6 +25,34 @@ resource serviceBusNamespace 'Microsoft.ServiceBus/namespaces@2021-11-01' = {
   }
 }
 
+// Topics/Queues/Subscriptions
+resource topicCompletedRegistrations 'Microsoft.ServiceBus/namespaces/topics@2021-11-01' = {
+  parent: serviceBusNamespace
+  name: 'completed-registrations'
+  properties: {
+    requiresDuplicateDetection: false
+    enablePartitioning: false
+    enableExpress: false
+  }
+}
+
+resource queueCompletedRegistrationsTelemetry 'Microsoft.ServiceBus/namespaces/queues@2021-11-01' = {
+  parent: serviceBusNamespace
+  name: 'completed-registrations-telemetry'
+  properties: {
+
+  }
+}
+
+resource subsCompletedRegistrations 'Microsoft.ServiceBus/namespaces/topics/subscriptions@2021-11-01' = {
+  parent: topicCompletedRegistrations
+  name: 'completed-registrations-telemetry'
+  properties: {
+    forwardTo: queueCompletedRegistrationsTelemetry.name
+    requiresSession: false
+  }
+}
+
 var serviceBusNamespaceAuthRuleEndpoint = '${serviceBusNamespace.id}/AuthorizationRules/RootManageSharedAccessKey'
 var serviceBusConnString = listKeys(serviceBusNamespaceAuthRuleEndpoint, serviceBusNamespace.apiVersion).primaryConnectionString
 

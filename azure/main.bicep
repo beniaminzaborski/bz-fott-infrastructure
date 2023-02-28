@@ -17,6 +17,8 @@ param dbAdminPassword string
 @allowed(['dev', 'qa', 'stg', 'prd'])
 param environment string
 
+param secondaryComosDbRegion string = 'northeurope'
+
 var createdBy = 'Beniamin'
 
 var appServicesSku = {
@@ -83,6 +85,7 @@ module databases 'modules/databases.bicep' = {
     createdBy: createdBy
     dbAdminLogin: dbAdminLogin
     dbAdminPassword: dbAdminPassword
+    secondaryRegion: secondaryComosDbRegion
   }
   dependsOn: [
     vaults
