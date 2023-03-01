@@ -26,7 +26,7 @@ jobs:
       uses: azure/arm-deploy@v1
       with:
         subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
-        resourceGroupName: ${{ secrets.AZURE_RG }}
+        resourceGroupName: ${{ vars.AZURE_RG }}
         template: azure/main.bicep
-        parameters: 'environment=${{ github.event.inputs.environment }} dbAdminLogin=${{ secrets.DB_ADMIN_LOGIN }} dbAdminPassword=${{ secrets.DB_ADMIN_PASSWORD }} secondaryComosDbRegion=${{ secrets.SECONDARY_COSMOSDB_REGION }}'
+        parameters: 'environment=${{ github.event.inputs.environment }} dbAdminLogin=${{ secrets.DB_ADMIN_LOGIN }} dbAdminPassword=${{ secrets.DB_ADMIN_PASSWORD }} secondaryComosDbRegion=${{ vars.SECONDARY_COSMOSDB_REGION }}'
         failOnStdErr: false
