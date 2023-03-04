@@ -26,9 +26,9 @@ resource serviceBusNamespace 'Microsoft.ServiceBus/namespaces@2021-11-01' = {
 }
 
 // Topics/Queues/Subscriptions
-resource topicCompletedRegistrations 'Microsoft.ServiceBus/namespaces/topics@2021-11-01' = {
+resource topicRegistrationCompleted 'Microsoft.ServiceBus/namespaces/topics@2021-11-01' = {
   parent: serviceBusNamespace
-  name: 'completed-registrations'
+  name: 'registration-completed'
   properties: {
     requiresDuplicateDetection: false
     enablePartitioning: false
@@ -38,15 +38,15 @@ resource topicCompletedRegistrations 'Microsoft.ServiceBus/namespaces/topics@202
 
 resource queueCompletedRegistrationsTelemetry 'Microsoft.ServiceBus/namespaces/queues@2021-11-01' = {
   parent: serviceBusNamespace
-  name: 'completed-registrations-telemetry'
+  name: 'registration-completed-events-to-telemetry-service'
   properties: {
 
   }
 }
 
 resource subsCompletedRegistrations 'Microsoft.ServiceBus/namespaces/topics/subscriptions@2021-11-01' = {
-  parent: topicCompletedRegistrations
-  name: 'completed-registrations-telemetry'
+  parent: topicRegistrationCompleted
+  name: 'registration-completed-events-to-telemetry-service'
   properties: {
     forwardTo: queueCompletedRegistrationsTelemetry.name
     requiresSession: false
