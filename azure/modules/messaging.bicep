@@ -36,6 +36,16 @@ resource topicCheckpointAdded 'Microsoft.ServiceBus/namespaces/topics@2021-11-01
   }
 }
 
+resource topicCheckpointRemoved 'Microsoft.ServiceBus/namespaces/topics@2021-11-01' = {
+  parent: serviceBusNamespace
+  name: 'competition-checkpoint-removed'
+  properties: {
+    requiresDuplicateDetection: false
+    enablePartitioning: false
+    enableExpress: false
+  }
+}
+
 resource topicMaxCompetitorsIncreased 'Microsoft.ServiceBus/namespaces/topics@2021-11-01' = {
   parent: serviceBusNamespace
   name: 'competition-max-competitors-increased'
@@ -97,6 +107,16 @@ resource queueRegistrationCompletedEventsToTelemetry 'Microsoft.ServiceBus/names
   }
 }
 
+resource queueCheckpointsEventsToTelemetryService 'Microsoft.ServiceBus/namespaces/queues@2021-11-01' = {
+  parent: serviceBusNamespace
+  name: 'checkpoints-events-to-telemetry-service'
+  properties: {
+    enablePartitioning: false
+    requiresDuplicateDetection: false
+    requiresSession: false
+  }
+}
+
 // Subsciptions
 resource subsCompetitionEventsToRegistrationServiceMaxCompetitorsIncreased 'Microsoft.ServiceBus/namespaces/topics/subscriptions@2021-11-01' = {
   parent: topicMaxCompetitorsIncreased
@@ -133,6 +153,25 @@ resource subsRegistrationCompletedEventsToTelemetry 'Microsoft.ServiceBus/namesp
     requiresSession: false
   }
 }
+
+resource subsCheckpointsEventsToTelemetryServiceCheckpointAdded 'Microsoft.ServiceBus/namespaces/topics/subscriptions@2021-11-01' = {
+  parent: topicCheckpointAdded
+  name: 'checkpoints-events-to-telemetry-service'
+  properties: {
+    forwardTo: queueCheckpointsEventsToTelemetryService.name
+    requiresSession: false
+  }
+}
+
+resource subsCheckpointsEventsToTelemetryServiceCheckpointRemoved 'Microsoft.ServiceBus/namespaces/topics/subscriptions@2021-11-01' = {
+  parent: topicCheckpointRemoved
+  name: 'checkpoints-events-to-telemetry-service'
+  properties: {
+    forwardTo: queueCheckpointsEventsToTelemetryService.name
+    requiresSession: false
+  }
+}
+
 /*
 resource queueCheckpointEventsToTelemetry 'Microsoft.ServiceBus/namespaces/queues@2021-11-01' = {
   parent: serviceBusNamespace
