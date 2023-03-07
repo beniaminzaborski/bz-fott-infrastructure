@@ -25,7 +25,47 @@ resource serviceBusNamespace 'Microsoft.ServiceBus/namespaces@2021-11-01' = {
   }
 }
 
-// Topics/Queues/Subscriptions
+// Topics
+resource topicCheckpointAdded 'Microsoft.ServiceBus/namespaces/topics@2021-11-01' = {
+  parent: serviceBusNamespace
+  name: 'competition-checkpoint-added'
+  properties: {
+    requiresDuplicateDetection: false
+    enablePartitioning: false
+    enableExpress: false
+  }
+}
+
+resource topicMaxCompetitorsIncreased 'Microsoft.ServiceBus/namespaces/topics@2021-11-01' = {
+  parent: serviceBusNamespace
+  name: 'competition-max-competitors-increased'
+  properties: {
+    requiresDuplicateDetection: false
+    enablePartitioning: false
+    enableExpress: false
+  }
+}
+
+resource topicCompetitionOpenedForRegistration 'Microsoft.ServiceBus/namespaces/topics@2021-11-01' = {
+  parent: serviceBusNamespace
+  name: 'competition-opened-for-registration'
+  properties: {
+    requiresDuplicateDetection: false
+    enablePartitioning: false
+    enableExpress: false
+  }
+}
+
+resource topicCompetitionRegistrationCompleted 'Microsoft.ServiceBus/namespaces/topics@2021-11-01' = {
+  parent: serviceBusNamespace
+  name: 'competition-registration-completed'
+  properties: {
+    requiresDuplicateDetection: false
+    enablePartitioning: false
+    enableExpress: false
+  }
+}
+
 resource topicRegistrationCompleted 'Microsoft.ServiceBus/namespaces/topics@2021-11-01' = {
   parent: serviceBusNamespace
   name: 'registration-completed'
@@ -36,23 +76,81 @@ resource topicRegistrationCompleted 'Microsoft.ServiceBus/namespaces/topics@2021
   }
 }
 
-resource queueCompletedRegistrationsTelemetry 'Microsoft.ServiceBus/namespaces/queues@2021-11-01' = {
+// Queues
+resource queueCompetitionEventsToRegistrationService 'Microsoft.ServiceBus/namespaces/queues@2021-11-01' = {
   parent: serviceBusNamespace
-  name: 'registration-completed-events-to-telemetry-service'
+  name: 'competition-events-to-registration-service'
   properties: {
-
-  }
-}
-
-resource subsCompletedRegistrations 'Microsoft.ServiceBus/namespaces/topics/subscriptions@2021-11-01' = {
-  parent: topicRegistrationCompleted
-  name: 'registration-completed-events-to-telemetry-service'
-  properties: {
-    forwardTo: queueCompletedRegistrationsTelemetry.name
+    enablePartitioning: false
+    requiresDuplicateDetection: false
     requiresSession: false
   }
 }
 
+resource queueRegistrationCompletedEventsToTelemetry 'Microsoft.ServiceBus/namespaces/queues@2021-11-01' = {
+  parent: serviceBusNamespace
+  name: 'registration-completed-events-to-telemetry-service'
+  properties: {
+    enablePartitioning: false
+    requiresDuplicateDetection: false
+    requiresSession: false
+  }
+}
+
+// Subsciptions
+resource subsCompetitionEventsToRegistrationServiceMaxCompetitorsIncreased 'Microsoft.ServiceBus/namespaces/topics/subscriptions@2021-11-01' = {
+  parent: topicMaxCompetitorsIncreased
+  name: 'competition-events-to-registration-service'
+  properties: {
+    forwardTo: queueCompetitionEventsToRegistrationService.name
+    requiresSession: false
+  }
+}
+
+resource subsCompetitionEventsToRegistrationServiceOpenedForRegistration 'Microsoft.ServiceBus/namespaces/topics/subscriptions@2021-11-01' = {
+  parent: topicCompetitionOpenedForRegistration
+  name: 'competition-events-to-registration-service'
+  properties: {
+    forwardTo: queueCompetitionEventsToRegistrationService.name
+    requiresSession: false
+  }
+}
+
+resource subsCompetitionEventsToRegistrationServiceRegistrationCompleted 'Microsoft.ServiceBus/namespaces/topics/subscriptions@2021-11-01' = {
+  parent: topicCompetitionRegistrationCompleted
+  name: 'competition-events-to-registration-service'
+  properties: {
+    forwardTo: queueCompetitionEventsToRegistrationService.name
+    requiresSession: false
+  }
+}
+
+resource subsRegistrationCompletedEventsToTelemetry 'Microsoft.ServiceBus/namespaces/topics/subscriptions@2021-11-01' = {
+  parent: topicRegistrationCompleted
+  name: 'registration-completed-events-to-telemetry-service'
+  properties: {
+    forwardTo: queueRegistrationCompletedEventsToTelemetry.name
+    requiresSession: false
+  }
+}
+/*
+resource queueCheckpointEventsToTelemetry 'Microsoft.ServiceBus/namespaces/queues@2021-11-01' = {
+  parent: serviceBusNamespace
+  name: 'checkpoint-events-to-telemetry-service'
+  properties: {
+
+  }
+}
+
+resource subsCheckpointEventsToTelemetry 'Microsoft.ServiceBus/namespaces/topics/subscriptions@2021-11-01' = {
+  parent: topicRegistrationCompleted
+  name: 'checkpoint-events-to-telemetry-service'
+  properties: {
+    forwardTo: queueCheckpointEventsToTelemetry.name
+    requiresSession: false
+  }
+}
+*/
 var serviceBusNamespaceAuthRuleEndpoint = '${serviceBusNamespace.id}/AuthorizationRules/RootManageSharedAccessKey'
 var serviceBusConnString = listKeys(serviceBusNamespaceAuthRuleEndpoint, serviceBusNamespace.apiVersion).primaryConnectionString
 
