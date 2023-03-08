@@ -87,6 +87,10 @@ resource telemtrFuncApp 'Microsoft.Web/sites@2022-03-01' = {
           value: 'dotnet'
         }
         {
+          name: 'ServiceBusConnectionString'
+          value: '@Microsoft.KeyVault(SecretUri=${serviceBusSecretUri})'
+        }
+        {
           name: 'CosmosConnectionString'
           value: '@Microsoft.KeyVault(SecretUri=${telemtrDbSecretUri})'
         }
