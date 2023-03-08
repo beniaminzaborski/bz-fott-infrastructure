@@ -107,9 +107,19 @@ resource queueRegistrationCompletedEventsToTelemetry 'Microsoft.ServiceBus/names
   }
 }
 
-resource queueCheckpointsEventsToTelemetryService 'Microsoft.ServiceBus/namespaces/queues@2021-11-01' = {
+resource queueAddCheckpointEventsToTelemetryService 'Microsoft.ServiceBus/namespaces/queues@2021-11-01' = {
   parent: serviceBusNamespace
-  name: 'checkpoints-events-to-telemetry-service'
+  name: 'add-checkpoint-events-to-telemetry-service'
+  properties: {
+    enablePartitioning: false
+    requiresDuplicateDetection: false
+    requiresSession: false
+  }
+}
+
+resource queueRemoveCheckpointEventsToTelemetryService 'Microsoft.ServiceBus/namespaces/queues@2021-11-01' = {
+  parent: serviceBusNamespace
+  name: 'remove-checkpoint-events-to-telemetry-service'
   properties: {
     enablePartitioning: false
     requiresDuplicateDetection: false
@@ -154,42 +164,25 @@ resource subsRegistrationCompletedEventsToTelemetry 'Microsoft.ServiceBus/namesp
   }
 }
 
-resource subsCheckpointsEventsToTelemetryServiceCheckpointAdded 'Microsoft.ServiceBus/namespaces/topics/subscriptions@2021-11-01' = {
+resource subsAddCheckpointEventsToTelemetryService 'Microsoft.ServiceBus/namespaces/topics/subscriptions@2021-11-01' = {
   parent: topicCheckpointAdded
-  name: 'checkpoints-events-to-telemetry-service'
+  name: 'add-checkpoint-events-to-telemetry-service'
   properties: {
-    forwardTo: queueCheckpointsEventsToTelemetryService.name
+    forwardTo: queueAddCheckpointEventsToTelemetryService.name
     requiresSession: false
   }
 }
 
-resource subsCheckpointsEventsToTelemetryServiceCheckpointRemoved 'Microsoft.ServiceBus/namespaces/topics/subscriptions@2021-11-01' = {
+resource subsRemoveCheckpointEventsToTelemetryService 'Microsoft.ServiceBus/namespaces/topics/subscriptions@2021-11-01' = {
   parent: topicCheckpointRemoved
-  name: 'checkpoints-events-to-telemetry-service'
+  name: 'remove-checkpoint-events-to-telemetry-service'
   properties: {
-    forwardTo: queueCheckpointsEventsToTelemetryService.name
+    forwardTo: queueRemoveCheckpointEventsToTelemetryService.name
     requiresSession: false
   }
 }
 
-/*
-resource queueCheckpointEventsToTelemetry 'Microsoft.ServiceBus/namespaces/queues@2021-11-01' = {
-  parent: serviceBusNamespace
-  name: 'checkpoint-events-to-telemetry-service'
-  properties: {
 
-  }
-}
-
-resource subsCheckpointEventsToTelemetry 'Microsoft.ServiceBus/namespaces/topics/subscriptions@2021-11-01' = {
-  parent: topicRegistrationCompleted
-  name: 'checkpoint-events-to-telemetry-service'
-  properties: {
-    forwardTo: queueCheckpointEventsToTelemetry.name
-    requiresSession: false
-  }
-}
-*/
 var serviceBusNamespaceAuthRuleEndpoint = '${serviceBusNamespace.id}/AuthorizationRules/RootManageSharedAccessKey'
 var serviceBusConnString = listKeys(serviceBusNamespaceAuthRuleEndpoint, serviceBusNamespace.apiVersion).primaryConnectionString
 
