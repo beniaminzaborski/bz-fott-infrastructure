@@ -107,6 +107,16 @@ resource queueRegistrationCompletedEventsToTelemetry 'Microsoft.ServiceBus/names
   }
 }
 
+resource queueRegistrationCompletedEventsToRegistration 'Microsoft.ServiceBus/namespaces/queues@2021-11-01' = {
+  parent: serviceBusNamespace
+  name: 'registration-completed-events-to-Registration-service'
+  properties: {
+    enablePartitioning: false
+    requiresDuplicateDetection: false
+    requiresSession: false
+  }
+}
+
 resource queueAddCheckpointEventsToTelemetryService 'Microsoft.ServiceBus/namespaces/queues@2021-11-01' = {
   parent: serviceBusNamespace
   name: 'add-checkpoint-events-to-telemetry-service'
@@ -160,6 +170,15 @@ resource subsRegistrationCompletedEventsToTelemetry 'Microsoft.ServiceBus/namesp
   name: 'registration-completed-events-to-telemetry-service'
   properties: {
     forwardTo: queueRegistrationCompletedEventsToTelemetry.name
+    requiresSession: false
+  }
+}
+
+resource subsRegistrationCompletedEventsToRegistration 'Microsoft.ServiceBus/namespaces/topics/subscriptions@2021-11-01' = {
+  parent: topicRegistrationCompleted
+  name: 'registration-completed-events-to-registration-service'
+  properties: {
+    forwardTo: queueRegistrationCompletedEventsToRegistration.name
     requiresSession: false
   }
 }
