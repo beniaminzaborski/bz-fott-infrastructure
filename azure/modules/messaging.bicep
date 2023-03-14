@@ -109,7 +109,7 @@ resource queueRegistrationCompletedEventsToTelemetry 'Microsoft.ServiceBus/names
 
 resource queueRegistrationCompletedEventsToRegistration 'Microsoft.ServiceBus/namespaces/queues@2021-11-01' = {
   parent: serviceBusNamespace
-  name: 'registration-completed-events-to-Registration-service'
+  name: 'registration-completed-events-to-registration-service'
   properties: {
     enablePartitioning: false
     requiresDuplicateDetection: false
