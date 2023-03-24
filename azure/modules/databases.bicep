@@ -160,7 +160,7 @@ resource checkpointsContainer 'Microsoft.DocumentDB/databaseAccounts/sqlDatabase
       id: checkpointsContainerName
       partitionKey: {
         paths: [
-          '/checkpointId'
+          '/competitionId'
         ]
         kind: 'Hash'
       }
