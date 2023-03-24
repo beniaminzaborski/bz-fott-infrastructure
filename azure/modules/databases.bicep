@@ -22,6 +22,7 @@ param secondaryRegion string
 
 var competitorsContainerName = 'Competitors'
 var checkpointsContainerName = 'Checkpoints'
+var laptimeContainerName = 'LapTimes'
 
 /* PostgreSQL */
 resource postgres 'Microsoft.DBforPostgreSQL/servers@2017-12-01' = {
@@ -161,6 +162,41 @@ resource checkpointsContainer 'Microsoft.DocumentDB/databaseAccounts/sqlDatabase
       partitionKey: {
         paths: [
           '/competitionId'
+        ]
+        kind: 'Hash'
+      }
+      indexingPolicy: {
+        indexingMode: 'consistent'
+        includedPaths: [
+          {
+            path: '/*'
+          }
+        ]
+        excludedPaths: [
+          {
+              path: '/\'_etag\'/?'
+          }
+        ]
+      }
+      defaultTtl: 86400
+    }
+    options: {
+      autoscaleSettings: {
+        maxThroughput: 1000
+      }
+    }
+  }
+}
+
+resource laptimeContainer 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers@2022-08-15' = {
+  parent: cosmosDb
+  name: laptimeContainerName
+  properties: {
+    resource: {
+      id: laptimeContainerName
+      partitionKey: {
+        paths: [
+          '/number'
         ]
         kind: 'Hash'
       }
