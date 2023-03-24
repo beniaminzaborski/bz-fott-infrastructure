@@ -20,6 +20,9 @@ param dbAdminPassword string
 
 param secondaryRegion string
 
+var competitorsContainerName = 'Competitors'
+var checkpointsContainerName = 'Checkpoints'
+
 /* PostgreSQL */
 resource postgres 'Microsoft.DBforPostgreSQL/servers@2017-12-01' = {
   name: 'psql-${projectName}-${environment}-${shortLocation}'
@@ -110,6 +113,76 @@ resource cosmosDb 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases@2022-08-15
   properties: {
     resource: {
       id: 'fott_telemetry'
+    }
+  }
+}
+
+resource  competitorsContainer 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers@2022-08-15' = {
+  parent: cosmosDb
+  name: competitorsContainerName
+  properties: {
+    resource: {
+      id: competitorsContainerName
+      partitionKey: {
+        paths: [
+          '/number'
+        ]
+        kind: 'Hash'
+      }
+      indexingPolicy: {
+        indexingMode: 'consistent'
+        includedPaths: [
+          {
+            path: '/*'
+          }
+        ]
+        excludedPaths: [
+          {
+              path: '/\'_etag\'/?'
+          }
+        ]
+      }
+      defaultTtl: 86400
+    }
+    options: {
+      autoscaleSettings: {
+        maxThroughput: 1000
+      }
+    }
+  }
+}
+
+resource checkpointsContainer 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers@2022-08-15' = {
+  parent: cosmosDb
+  name: checkpointsContainerName
+  properties: {
+    resource: {
+      id: checkpointsContainerName
+      partitionKey: {
+        paths: [
+          '/checkpointId'
+        ]
+        kind: 'Hash'
+      }
+      indexingPolicy: {
+        indexingMode: 'consistent'
+        includedPaths: [
+          {
+            path: '/*'
+          }
+        ]
+        excludedPaths: [
+          {
+              path: '/\'_etag\'/?'
+          }
+        ]
+      }
+      defaultTtl: 86400
+    }
+    options: {
+      autoscaleSettings: {
+        maxThroughput: 1000
+      }
     }
   }
 }
