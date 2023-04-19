@@ -94,6 +94,10 @@ resource telemtrFuncApp 'Microsoft.Web/sites@2022-03-01' = {
           name: 'CosmosConnectionString'
           value: '@Microsoft.KeyVault(SecretUri=${telemtrDbSecretUri})'
         }
+        {
+          name: 'EventHubConnectionString'
+          value: '@Microsoft.KeyVault(SecretUri=${eventHubSecretUri})'
+        }
       ]
     }
   }
