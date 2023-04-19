@@ -126,7 +126,7 @@ resource  competitorsContainer 'Microsoft.DocumentDB/databaseAccounts/sqlDatabas
       id: competitorsContainerName
       partitionKey: {
         paths: [
-          '/number'
+          '/id'
         ]
         kind: 'Hash'
       }
@@ -161,7 +161,7 @@ resource checkpointsContainer 'Microsoft.DocumentDB/databaseAccounts/sqlDatabase
       id: checkpointsContainerName
       partitionKey: {
         paths: [
-          '/competitionId'
+          '/id'
         ]
         kind: 'Hash'
       }
@@ -196,7 +196,7 @@ resource laptimeContainer 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases/co
       id: laptimeContainerName
       partitionKey: {
         paths: [
-          '/number'
+          '/id'
         ]
         kind: 'Hash'
       }
