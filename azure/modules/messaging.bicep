@@ -253,4 +253,4 @@ resource kvEventHubConnString 'Microsoft.KeyVault/vaults/secrets@2019-09-01' = {
   }
 }
 
-output eventHubSecretUri string = kvServiceBusConnString.properties.secretUri
+output eventHubSecretUri string = kvEventHubConnString.properties.secretUri
