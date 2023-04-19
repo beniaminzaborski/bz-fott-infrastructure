@@ -103,6 +103,7 @@ resource cosmosDbAccount 'Microsoft.DocumentDB/databaseAccounts@2022-08-15' = {
   location: location
   properties: {
     locations: locations
+    enableFreeTier: true
     databaseAccountOfferType: 'Standard'
     enableAutomaticFailover: false
   }
@@ -114,6 +115,9 @@ resource cosmosDb 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases@2022-08-15
   properties: {
     resource: {
       id: 'fott_telemetry'
+    }
+    options: {
+      throughput: 1000
     }
   }
 }
@@ -142,12 +146,6 @@ resource  competitorsContainer 'Microsoft.DocumentDB/databaseAccounts/sqlDatabas
               path: '/\'_etag\'/?'
           }
         ]
-      }
-      defaultTtl: 86400
-    }
-    options: {
-      autoscaleSettings: {
-        maxThroughput: 1000
       }
     }
   }
@@ -178,12 +176,6 @@ resource checkpointsContainer 'Microsoft.DocumentDB/databaseAccounts/sqlDatabase
           }
         ]
       }
-      defaultTtl: 86400
-    }
-    options: {
-      autoscaleSettings: {
-        maxThroughput: 1000
-      }
     }
   }
 }
@@ -212,12 +204,6 @@ resource laptimeContainer 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases/co
               path: '/\'_etag\'/?'
           }
         ]
-      }
-      defaultTtl: 86400
-    }
-    options: {
-      autoscaleSettings: {
-        maxThroughput: 1000
       }
     }
   }
