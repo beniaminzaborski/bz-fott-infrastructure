@@ -86,6 +86,16 @@ resource topicRegistrationCompleted 'Microsoft.ServiceBus/namespaces/topics@2021
   }
 }
 
+resource topicTimeCalculated 'Microsoft.ServiceBus/namespaces/topics@2021-11-01' = {
+  parent: serviceBusNamespace
+  name: 'competitor-time-calculated'
+  properties: {
+    requiresDuplicateDetection: false
+    enablePartitioning: false
+    enableExpress: false
+  }
+}
+
 // Queues
 resource queueCompetitionEventsToRegistrationService 'Microsoft.ServiceBus/namespaces/queues@2021-11-01' = {
   parent: serviceBusNamespace
@@ -130,6 +140,16 @@ resource queueAddCheckpointEventsToTelemetryService 'Microsoft.ServiceBus/namesp
 resource queueRemoveCheckpointEventsToTelemetryService 'Microsoft.ServiceBus/namespaces/queues@2021-11-01' = {
   parent: serviceBusNamespace
   name: 'remove-checkpoint-events-to-telemetry-service'
+  properties: {
+    enablePartitioning: false
+    requiresDuplicateDetection: false
+    requiresSession: false
+  }
+}
+
+resource queueTimeCalculatedEventsToRegistrationService 'Microsoft.ServiceBus/namespaces/queues@2021-11-01' = {
+  parent: serviceBusNamespace
+  name: 'competitor-time-calculated-events-to-registr-service'
   properties: {
     enablePartitioning: false
     requiresDuplicateDetection: false
@@ -201,6 +221,14 @@ resource subsRemoveCheckpointEventsToTelemetryService 'Microsoft.ServiceBus/name
   }
 }
 
+resource subsTimeCalculatedEventsToRegistrationService 'Microsoft.ServiceBus/namespaces/topics/subscriptions@2021-11-01' = {
+  parent: topicTimeCalculated
+  name: 'competitor-time-calculated-events-to-registr-service'
+  properties: {
+    forwardTo: queueTimeCalculatedEventsToRegistrationService.name
+    requiresSession: false
+  }
+}
 
 var serviceBusNamespaceAuthRuleEndpoint = '${serviceBusNamespace.id}/AuthorizationRules/RootManageSharedAccessKey'
 var serviceBusConnString = listKeys(serviceBusNamespaceAuthRuleEndpoint, serviceBusNamespace.apiVersion).primaryConnectionString
