@@ -223,7 +223,7 @@ resource subsRemoveCheckpointEventsToTelemetryService 'Microsoft.ServiceBus/name
 
 resource subsTimeCalculatedEventsToRegistrationService 'Microsoft.ServiceBus/namespaces/topics/subscriptions@2021-11-01' = {
   parent: topicTimeCalculated
-  name: 'competitor-time-calculated-events-to-registr-service'
+  name: 'time-calculated-events-to-registr-service'
   properties: {
     forwardTo: queueTimeCalculatedEventsToRegistrationService.name
     requiresSession: false
