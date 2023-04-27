@@ -1,32 +1,27 @@
 name: Deploy Azure infrastructure from Bicep
 
 on:
-  workflow_dispatch:
-    inputs:
-      environment:
-        description: 'Environment name. Allowed values: dev, qa, stg, prod'
-        required: true
-        default: 'dev'
+  # ...
 
 jobs:
   build-and-deploy:
-    runs-on: self-hosted
+    runs-on: # ...
     steps:
 
       # Checkout code
-    - uses: actions/checkout@v2
+    - uses: # ...
 
       # Log into Azure
-    - uses: azure/login@v1
+    - uses: # ...
       with:
-        creds: ${{ secrets.AZURE_CREDENTIALS }}
+        creds: # ...
 
       # Deploy Bicep file
-    - name: deploy
-      uses: azure/arm-deploy@v1
+    - name: # ...
+      uses: # ...
       with:
-        subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
-        resourceGroupName: ${{ vars.AZURE_RG }}
-        template: azure/main.bicep
-        parameters: 'environment=${{ github.event.inputs.environment }} dbAdminLogin=${{ secrets.DB_ADMIN_LOGIN }} dbAdminPassword=${{ secrets.DB_ADMIN_PASSWORD }} secondaryComosDbRegion=${{ vars.SECONDARY_COSMOSDB_REGION }}'
+        subscriptionId: # ...
+        resourceGroupName: # ...
+        template: # ...
+        parameters: # ...
         failOnStdErr: false
