@@ -12,20 +12,7 @@ param environment string
 @minLength(2)
 param createdBy string
 
+// TODO: Utwórz zasób KeyVault
 resource keyVault 'Microsoft.KeyVault/vaults@2022-07-01' = {
-  name: 'kv-${projectName}-${environment}-${shortLocation}'
-  location: location
-  tags: {
-    environment: environment
-    createdBy: createdBy
-  }
-  properties: {
-    enabledForTemplateDeployment: true
-    tenantId: subscription().tenantId
-    accessPolicies: []
-    sku: {
-      name: 'standard'
-      family: 'A'
-    }
-  }
+  // ...
 }

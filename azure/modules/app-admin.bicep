@@ -24,32 +24,17 @@ param serviceBusSecretUri string
 @description('App plan SKU')
 param appServicesSku object
 
+// TODO: Utwórz zadób App Service Plan
 resource adminAppPlan 'Microsoft.Web/serverfarms@2022-03-01' = {
-  name: 'plan-${projectName}-admin-${environment}-${shortLocation}'
-  location: location
-  sku: {
-    name: appServicesSku[environment].name
-  }
-  properties: {
-    reserved: true
-  }
-  tags: {
-    environment: environment
-    createdBy: createdBy
-  }
-  kind: 'linux'
+  // ...
 }
 
+// TODO: Utwórz zasób App Service
 resource adminAppService 'Microsoft.Web/sites@2022-03-01' = {
-  name: 'app-${projectName}-admin-${environment}-${shortLocation}'
-  location: location
-  identity: {
-    type: 'SystemAssigned'
-  }
+  // ...
   kind: 'app'
   properties: {
-    enabled: true
-    serverFarmId: adminAppPlan.id
+    // ...
     siteConfig: {
       vnetRouteAllEnabled: true
       alwaysOn: appServicesSku[environment].name == 'F1' ? false : true
@@ -65,19 +50,16 @@ resource adminAppService 'Microsoft.Web/sites@2022-03-01' = {
         }
         {
           name: 'ConnectionStrings__AzureServiceBus'
-          value: '@Microsoft.KeyVault(SecretUri=${serviceBusSecretUri})'
+          value: // ...
         }
         {
           name: 'ConnectionStrings__ApplicationInsights'
-          value: '@Microsoft.KeyVault(SecretUri=${appInsightsSecretUri})'
+          value: // ...
         }
       ]
     }
   }
-  tags: {
-    environment: environment
-    createdBy: createdBy
-  }
+  // ...
 }
 
 resource vaultAccessPolicy 'Microsoft.KeyVault/vaults/accessPolicies@2022-07-01' = {
@@ -87,9 +69,7 @@ resource vaultAccessPolicy 'Microsoft.KeyVault/vaults/accessPolicies@2022-07-01'
       {
         objectId: adminAppService.identity.principalId
         permissions: {
-          secrets: [
-            'get'
-          ]
+          // ...
         }
         tenantId: subscription().tenantId
       }          

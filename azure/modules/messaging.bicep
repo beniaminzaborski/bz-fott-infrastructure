@@ -12,27 +12,18 @@ param environment string
 @minLength(2)
 param createdBy string
 
-/* Service Bus */
+// TODO: Utwórz zasób Service Bus Namespace
 resource serviceBusNamespace 'Microsoft.ServiceBus/namespaces@2021-11-01' = {
-  name: 'sb-${projectName}-${environment}-${shortLocation}'
-  location: location
-  sku: {
-    name: 'Standard'
-  }
-  tags: {
-    environment: environment
-    createdBy: createdBy
-  }
+  // ...
 }
 
 var serviceBusNamespaceAuthRuleEndpoint = '${serviceBusNamespace.id}/AuthorizationRules/RootManageSharedAccessKey'
 var serviceBusConnString = listKeys(serviceBusNamespaceAuthRuleEndpoint, serviceBusNamespace.apiVersion).primaryConnectionString
 
+// TODO: Dodaj connection string do Message Bus do KeyVault Secrets
 resource kvServiceBusConnString 'Microsoft.KeyVault/vaults/secrets@2019-09-01' = {
-  name: 'kv-${projectName}-${environment}-${shortLocation}/ConnectionString-Fott-ServiceBus'
-  properties: {
-    value: serviceBusConnString
-  }
+  // ...
 }
 
-output serviceBusSecretUri string = kvServiceBusConnString.properties.secretUri
+// TODO: Zwróć connection do Message Bus z KeyVault
+output serviceBusSecretUri string = // ...

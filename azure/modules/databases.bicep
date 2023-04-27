@@ -18,47 +18,26 @@ param dbAdminLogin string
 @secure()
 param dbAdminPassword string
 
-/* PostgreSQL */
+// TODO: Utwórz zasób PostgreSQL
 resource postgres 'Microsoft.DBforPostgreSQL/servers@2017-12-01' = {
-  name: 'psql-${projectName}-${environment}-${shortLocation}'
-  location: location
-  sku: {
-    name: 'B_Gen5_1'
-    tier: 'Basic'
-  }
-  tags: {
-    environment: environment
-    createdBy: createdBy
-  }
-  properties: {
-    administratorLogin: dbAdminLogin
-    administratorLoginPassword: dbAdminPassword
-    createMode: 'Default'
-    version: '11'
-    sslEnforcement: 'Enabled'
-    publicNetworkAccess: 'Enabled'
-  }
+  // ...
 }
 
+// TODO: Dodaj regułę firewall dla PostgreSQL
 resource postgresFirewallRules 'Microsoft.DBforPostgreSQL/servers/firewallRules@2017-12-01' = {
-  name: 'AllowAllWindowsAzureIps'
-  parent: postgres
-  properties: {
-    endIpAddress: '0.0.0.0'
-    startIpAddress: '0.0.0.0'
-  }
+  // ...
 }
 
+// TODO: Utwórz bazę danych na serwerze PostgreSQL dla usługi Admin
 resource adminDB 'Microsoft.DBforPostgreSQL/servers/databases@2017-12-01' = {
-  name: 'fott_administration'
-  parent: postgres
+  // ...
 }
 
+// TODO: Dodaj connection string do KeyVault Secrets
 resource kvAdminDbPostgresConnString 'Microsoft.KeyVault/vaults/secrets@2022-07-01' = {
-  name: 'kv-${projectName}-${environment}-${shortLocation}/ConnectionString-Fott-Administration-Postgres'
-  properties: {
-    value: 'Server=${postgres.name}.postgres.database.azure.com;Database=${adminDB.name};Port=5432;Ssl Mode=Require;Trust Server Certificate=true;User Id=${dbAdminLogin}@${postgres.name};Password=${dbAdminPassword};'
-  }
+  // ...
+  // value: 'Server=${postgres.name}.postgres.database.azure.com;Database=${adminDB.name};Port=5432;Ssl Mode=Require;Trust Server Certificate=true;User Id=${dbAdminLogin}@${postgres.name};Password=${dbAdminPassword};'
 }
 
-output adminDbSecretUri string = kvAdminDbPostgresConnString.properties.secretUri
+// TODO: Zwróć connection string do bazy danych w PostgreSQL z KeyVault
+output adminDbSecretUri string = // ...

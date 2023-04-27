@@ -12,19 +12,9 @@ param environment string
 @minLength(2)
 param createdBy string
 
+// TODO: Utwórz zasób ApplicationInsights
 resource applicationInsights 'Microsoft.Insights/components@2020-02-02' = {
-  name: 'appi-${projectName}-${environment}-${shortLocation}'
-  location: location
-  tags: {
-    environment: environment
-    createdBy: createdBy
-  }
-  kind: 'web'
-  properties: {
-    Application_Type: 'web'
-    ImmediatePurgeDataOn30Days: true
-    RetentionInDays: 30
-  }
+  // ...
 }
 
 resource kvAppInsightsConnString 'Microsoft.KeyVault/vaults/secrets@2022-07-01' = {
