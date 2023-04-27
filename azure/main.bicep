@@ -17,8 +17,6 @@ param dbAdminPassword string
 @allowed(['dev', 'qa', 'stg', 'prd'])
 param environment string
 
-param secondaryComosDbRegion string = 'northeurope'
-
 var createdBy = 'Beniamin'
 
 var appServicesSku = {
@@ -61,20 +59,6 @@ module observability 'modules/observability.bicep' = {
   ]   
 }
 
-module notification 'modules/notification.bicep' = {
-  name: 'notificationModule'
-  params: {
-    location: location
-    shortLocation: shortLocation
-    projectName: projectName
-    environment: environment
-    createdBy: createdBy
-  }
-  dependsOn: [
-    vaults
-  ]  
-}
-
 module databases 'modules/databases.bicep' = {
   name: 'databaseModule'
   params: {
@@ -85,7 +69,6 @@ module databases 'modules/databases.bicep' = {
     createdBy: createdBy
     dbAdminLogin: dbAdminLogin
     dbAdminPassword: dbAdminPassword
-    secondaryRegion: secondaryComosDbRegion
   }
   dependsOn: [
     vaults
@@ -94,20 +77,6 @@ module databases 'modules/databases.bicep' = {
 
 module messaging 'modules/messaging.bicep' = {
   name: 'messagingModule'
-  params: {
-    location: location
-    shortLocation: shortLocation
-    projectName: projectName
-    environment: environment
-    createdBy: createdBy
-  }
-  dependsOn: [
-    vaults
-  ]  
-}
-
-module storage 'modules/storage.bicep' = {
-  name: 'storageModule'
   params: {
     location: location
     shortLocation: shortLocation
@@ -138,53 +107,5 @@ module appAdmin 'modules/app-admin.bicep' = {
     databases
     messaging
     observability
-    storage
   ]  
-}
-
-module appRegistr 'modules/app-registr.bicep' = {
-  name: 'appRegistrModule'
-  params: {
-    location: location
-    shortLocation: shortLocation
-    projectName: projectName
-    environment: environment
-    createdBy: createdBy
-    appInsightsSecretUri: observability.outputs.appInsightsSecretUri
-    appInsightsInstrumentationKey: observability.outputs.instrumentationKey
-    registrDbSecretUri: databases.outputs.registrDbSecretUri
-    serviceBusSecretUri: messaging.outputs.serviceBusSecretUri
-    signalrSecretUri: notification.outputs.signalrSecretUri
-    appServicesSku: appServicesSku
-  }
-  dependsOn: [
-    vaults
-    databases
-    messaging
-    observability
-    storage
-  ]  
-}
-
-module appTelemtr 'modules/app-telemtr.bicep' = {
-  name: 'appTelemtrModule'
-  params: {
-    location: location
-    shortLocation: shortLocation
-    projectName: projectName
-    environment: environment
-    createdBy: createdBy
-    appInsightsInstrumentationKey: observability.outputs.instrumentationKey
-    telemtrDbSecretUri: databases.outputs.telemtrDbSecretUri
-    eventHubSecretUri: messaging.outputs.eventHubSecretUri
-    serviceBusSecretUri: messaging.outputs.serviceBusSecretUri
-    signalrSecretUri: notification.outputs.signalrSecretUri
-  }
-  dependsOn: [
-    vaults
-    databases
-    messaging
-    observability
-    storage
-  ]
 }

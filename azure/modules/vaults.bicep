@@ -29,20 +29,3 @@ resource keyVault 'Microsoft.KeyVault/vaults@2022-07-01' = {
     }
   }
 }
-
-// resource accessPolicy 'Microsoft.KeyVault/vaults/accessPolicies@2022-07-01' = {
-//   name: 'kv-${projectName}-${environment}-${shortLocation}/add'
-//   properties: {
-//     accessPolicies: [
-//       {
-//         objectId: adminAppId
-//         permissions: {
-//           secrets: [
-//             'get'
-//           ]
-//         }
-//         tenantId: subscription().tenantId
-//       }
-//     ]
-//   }
-// }
