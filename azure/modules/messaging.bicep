@@ -243,32 +243,14 @@ resource kvServiceBusConnString 'Microsoft.KeyVault/vaults/secrets@2019-09-01' =
 output serviceBusSecretUri string = kvServiceBusConnString.properties.secretUri
 
 
-/* Event Hubs */
+// TODO: Utwórz zasób Event Hubs Namespace
 resource eventHubNamespace 'Microsoft.EventHub/namespaces@2021-11-01' = {
-  name: 'evhns-${projectName}-${environment}-${shortLocation}'
-  location: location
-  sku: {
-    name: 'Basic'
-    tier: 'Basic'
-    capacity: 1
-  }
-  properties: {
-    isAutoInflateEnabled: false
-    maximumThroughputUnits: 0
-  }
-  tags: {
-    environment: environment
-    createdBy: createdBy
-  }
+  // ...
 }
 
+// TODO: Utwórz zasób Event Hub
 resource eventHub 'Microsoft.EventHub/namespaces/eventhubs@2021-11-01' = {
-  parent: eventHubNamespace
-  name: 'evh-${projectName}-${environment}-${shortLocation}'
-  properties: {
-    messageRetentionInDays: 1
-    partitionCount: 1
-  }
+  // ...
 }
 
 var eventHubNamespaceAuthRuleEndpoint = '${eventHubNamespace.id}/AuthorizationRules/RootManageSharedAccessKey'

@@ -97,116 +97,34 @@ var locations = [
   }
 ]
 
+// TODO: Utwórz zasób Azure CosmosDB Account
 resource cosmosDbAccount 'Microsoft.DocumentDB/databaseAccounts@2022-08-15' = {
-  name: 'cosacc-${projectName}-${environment}-${shortLocation}'
-  kind: 'GlobalDocumentDB'
+  //...
   location: location
   properties: {
     locations: locations
-    enableFreeTier: true
-    databaseAccountOfferType: 'Standard'
-    enableAutomaticFailover: false
+    // ...
   }
 }
 
+// TODO: Utwórz zasób bazy danych z interfejsem SQL
 resource cosmosDb 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases@2022-08-15' = {
-  name: 'fott_telemetry'
-  parent: cosmosDbAccount
-  properties: {
-    resource: {
-      id: 'fott_telemetry'
-    }
-    options: {
-      throughput: 1000
-    }
-  }
+  // ...
 }
 
+// TODO: Utwórz w bazie danych kontener Competitors
 resource  competitorsContainer 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers@2022-08-15' = {
-  parent: cosmosDb
-  name: competitorsContainerName
-  properties: {
-    resource: {
-      id: competitorsContainerName
-      partitionKey: {
-        paths: [
-          '/id'
-        ]
-        kind: 'Hash'
-      }
-      indexingPolicy: {
-        indexingMode: 'consistent'
-        includedPaths: [
-          {
-            path: '/*'
-          }
-        ]
-        excludedPaths: [
-          {
-              path: '/\'_etag\'/?'
-          }
-        ]
-      }
-    }
-  }
+  // ...
 }
 
+// TODO: Utwórz w bazie danych kontener Checkpoints
 resource checkpointsContainer 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers@2022-08-15' = {
-  parent: cosmosDb
-  name: checkpointsContainerName
-  properties: {
-    resource: {
-      id: checkpointsContainerName
-      partitionKey: {
-        paths: [
-          '/id'
-        ]
-        kind: 'Hash'
-      }
-      indexingPolicy: {
-        indexingMode: 'consistent'
-        includedPaths: [
-          {
-            path: '/*'
-          }
-        ]
-        excludedPaths: [
-          {
-              path: '/\'_etag\'/?'
-          }
-        ]
-      }
-    }
-  }
+  // ...
 }
 
+// TODO: Utwórz w bazie danych kontener LapTimes
 resource laptimeContainer 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers@2022-08-15' = {
-  parent: cosmosDb
-  name: laptimeContainerName
-  properties: {
-    resource: {
-      id: laptimeContainerName
-      partitionKey: {
-        paths: [
-          '/id'
-        ]
-        kind: 'Hash'
-      }
-      indexingPolicy: {
-        indexingMode: 'consistent'
-        includedPaths: [
-          {
-            path: '/*'
-          }
-        ]
-        excludedPaths: [
-          {
-              path: '/\'_etag\'/?'
-          }
-        ]
-      }
-    }
-  }
+  // ...
 }
 
 resource kvTelemtrDbComosConnString 'Microsoft.KeyVault/vaults/secrets@2022-07-01' = {
