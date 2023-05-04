@@ -159,30 +159,15 @@ resource queueTimeCalculatedEventsToRegistrationService 'Microsoft.ServiceBus/na
 
 // Subsciptions
 resource subsCompetitionEventsToRegistrationServiceMaxCompetitorsIncreased 'Microsoft.ServiceBus/namespaces/topics/subscriptions@2021-11-01' = {
-  parent: topicMaxCompetitorsIncreased
-  name: 'competition-events-to-registration-service'
-  properties: {
-    forwardTo: queueCompetitionEventsToRegistrationService.name
-    requiresSession: false
-  }
+  // ...
 }
 
 resource subsCompetitionEventsToRegistrationServiceOpenedForRegistration 'Microsoft.ServiceBus/namespaces/topics/subscriptions@2021-11-01' = {
-  parent: topicCompetitionOpenedForRegistration
-  name: 'competition-events-to-registration-service'
-  properties: {
-    forwardTo: queueCompetitionEventsToRegistrationService.name
-    requiresSession: false
-  }
+  // ...
 }
 
 resource subsCompetitionEventsToRegistrationServiceRegistrationCompleted 'Microsoft.ServiceBus/namespaces/topics/subscriptions@2021-11-01' = {
-  parent: topicCompetitionRegistrationCompleted
-  name: 'competition-events-to-registration-service'
-  properties: {
-    forwardTo: queueCompetitionEventsToRegistrationService.name
-    requiresSession: false
-  }
+  // ...
 }
 
 resource subsRegistrationCompletedEventsToTelemetry 'Microsoft.ServiceBus/namespaces/topics/subscriptions@2021-11-01' = {

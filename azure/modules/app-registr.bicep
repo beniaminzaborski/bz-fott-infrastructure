@@ -45,21 +45,10 @@ resource registrAppPlan 'Microsoft.Web/serverfarms@2022-03-01' = {
   kind: 'linux'
 }
 
+// TODO: Utwórz App Service Plan typu serverless dla Azure Function App
 resource registrSrvLessAppPlan 'Microsoft.Web/serverfarms@2022-03-01' = {
   name: 'plan-${projectName}-slregistr-${environment}-${shortLocation}'
-  location: location
-  kind: 'functionapp'
-  sku: {
-    name: 'Y1'
-    tier: 'Dynamic'
-  }
-  properties: {
-    //reserved: true // on Linux
-  }
-  tags: {
-    environment: environment
-    createdBy: createdBy
-  }
+  // ...
 }
 
 resource registrAppService 'Microsoft.Web/sites@2022-03-01' = {
@@ -102,67 +91,14 @@ resource registrAppService 'Microsoft.Web/sites@2022-03-01' = {
   }
 }
 
-// Dedicated Strorage Account for Azure Function App
+// TODO: Utwórz dedykowany Storage Account dla Azure Function App 
 resource storageAccountRegistrFuncApp 'Microsoft.Storage/storageAccounts@2022-09-01' = {
-  name: 'st${projectName}fregistr${environment}${shortLocation}'
-  location: location
-  kind: 'Storage'
-  sku: {
-    name: 'Standard_LRS'
-  }
-  tags: {
-    environment: environment
-    createdBy: createdBy
-  }
+  // ...
 }
 
+// TODO: Utwórz zasób Azure Function App
 resource registrFuncApp 'Microsoft.Web/sites@2022-03-01' = {
-  name: 'func-${projectName}-registr-${environment}-${shortLocation}'
-  location: location
-  kind: 'functionapp'
-  identity: {
-    type: 'SystemAssigned'
-  }
-  properties: {
-    serverFarmId: registrSrvLessAppPlan.id
-    siteConfig: {
-      appSettings: [
-        {
-          name: 'APPINSIGHTS_INSTRUMENTATIONKEY'
-          value: appInsightsInstrumentationKey
-        }
-        {
-          name: 'AzureWebJobsStorage'
-          //value: '@Microsoft.KeyVault(SecretUri=${storageAccountSecretUri})'
-          value: 'DefaultEndpointsProtocol=https;AccountName=${storageAccountRegistrFuncApp.name};EndpointSuffix=${az.environment().suffixes.storage};AccountKey=${listKeys(storageAccountRegistrFuncApp.id, storageAccountRegistrFuncApp.apiVersion).keys[0].value}'
-        }
-        {
-          name: 'FUNCTIONS_EXTENSION_VERSION'
-          value: '~4'
-        }
-        {
-          name: 'FUNCTIONS_WORKER_RUNTIME'
-          value: 'dotnet'
-        }
-        {
-          name: 'ServiceBusConnectionString'
-          value: '@Microsoft.KeyVault(SecretUri=${serviceBusSecretUri})'
-        }
-        {
-          name: 'PostgresConnectionString'
-          value: '@Microsoft.KeyVault(SecretUri=${registrDbSecretUri})'
-        }
-        {
-          name: 'SignalRConnectionString'
-          value: '@Microsoft.KeyVault(SecretUri=${signalrSecretUri})'
-        }
-      ]
-    }
-  }
-  tags: {
-    environment: environment
-    createdBy: createdBy
-  }
+  // ...
 }
 
 resource vaultAccessPolicy 'Microsoft.KeyVault/vaults/accessPolicies@2022-07-01' = {

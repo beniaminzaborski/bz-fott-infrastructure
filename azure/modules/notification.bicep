@@ -12,32 +12,9 @@ param environment string
 @minLength(2)
 param createdBy string
 
+// TODO: Utwórz zasób Azure SignalR
 resource signalR 'Microsoft.SignalRService/signalR@2022-02-01' = {
-  name: 'sigr-${projectName}-${environment}-${shortLocation}'
-  location: location
-  sku: {
-    name: 'Free_F1'
-    tier: 'Free'
-  }
-  kind: 'SignalR'
-  properties: {
-    cors: {
-      allowedOrigins: [
-        '*'
-      ]
-    }
-    publicNetworkAccess: 'Enabled'
-    features: [
-      {
-        flag: 'ServiceMode'
-        value: 'Serverless'
-      }
-    ]
-  }
-  tags: {
-    environment: environment
-    createdBy: createdBy
-  }
+  // ...
 }
 
 resource kvSignalRConnString 'Microsoft.KeyVault/vaults/secrets@2022-07-01' = {
