@@ -24,6 +24,11 @@ var competitorsContainerName = 'Competitors'
 var checkpointsContainerName = 'Checkpoints'
 var laptimeContainerName = 'LapTimes'
 
+var sqlDatabaseNames = [
+  'Fott-Administration'
+  'Fott-Registration'
+]
+
 /* PostgreSQL */
 resource postgres 'Microsoft.DBforPostgreSQL/servers@2017-12-01' = {
   name: 'psql-${projectName}-${environment}-${shortLocation}'
@@ -55,33 +60,22 @@ resource postgresFirewallRules 'Microsoft.DBforPostgreSQL/servers/firewallRules@
   }
 }
 
-resource adminDB 'Microsoft.DBforPostgreSQL/servers/databases@2017-12-01' = {
-  name: 'fott_administration'
+// Create Postgres databases in the loop one by one
+resource psqlDB 'Microsoft.DBforPostgreSQL/servers/databases@2017-12-01' = [for sqlDbName in sqlDatabaseNames: {
+  name: sqlDbName
   parent: postgres
-}
+}]
 
-resource kvAdminDbPostgresConnString 'Microsoft.KeyVault/vaults/secrets@2022-07-01' = {
-  name: 'kv-${projectName}-${environment}-${shortLocation}/ConnectionString-Fott-Administration-Postgres'
+// Put Postgres database connection strings into Key Vault in the loop one by one
+resource psqlDBConnString 'Microsoft.KeyVault/vaults/secrets@2022-07-01' = [for sqlDbName in sqlDatabaseNames: {
+  name: 'kv-${projectName}-${environment}-${shortLocation}/ConnectionString-${sqlDbName}-Postgres'
   properties: {
-    value: 'Server=${postgres.name}.postgres.database.azure.com;Database=${adminDB.name};Port=5432;Ssl Mode=Require;Trust Server Certificate=true;User Id=${dbAdminLogin}@${postgres.name};Password=${dbAdminPassword};'
+    value: 'Server=${postgres.name}.postgres.database.azure.com;Database=${sqlDbName};Port=5432;Ssl Mode=Require;Trust Server Certificate=true;User Id=${dbAdminLogin}@${postgres.name};Password=${dbAdminPassword};'
   }
-}
+}]
 
-resource registrDB 'Microsoft.DBforPostgreSQL/servers/databases@2017-12-01' = {
-  name: 'fott_registration'
-  parent: postgres
-}
-
-resource kvRegistrDbPostgresConnString 'Microsoft.KeyVault/vaults/secrets@2022-07-01' = {
-  name: 'kv-${projectName}-${environment}-${shortLocation}/ConnectionString-Fott-Registration-Postgres'
-  properties: {
-    value: 'Server=${postgres.name}.postgres.database.azure.com;Database=${registrDB.name};Port=5432;Ssl Mode=Require;Trust Server Certificate=true;User Id=${dbAdminLogin}@${postgres.name};Password=${dbAdminPassword};'
-  }
-}
-
-output adminDbSecretUri string = kvAdminDbPostgresConnString.properties.secretUri
-output registrDbSecretUri string = kvRegistrDbPostgresConnString.properties.secretUri
-
+output adminDbSecretUri string = psqlDBConnString[0].properties.secretUri
+output registrDbSecretUri string = psqlDBConnString[1].properties.secretUri
 
 /* CosmosDB */
 var locations = [
