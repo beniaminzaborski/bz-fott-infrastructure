@@ -51,6 +51,11 @@ resource adminAppService 'Microsoft.Web/sites@2022-03-01' = {
     enabled: true
     serverFarmId: adminAppPlan.id
     siteConfig: {
+      cors: {
+        allowedOrigins: [
+          '*'
+        ]
+      }
       vnetRouteAllEnabled: true
       alwaysOn: appServicesSku[environment].name == 'F1' ? false : true
       linuxFxVersion: 'DOTNETCORE|7.0'

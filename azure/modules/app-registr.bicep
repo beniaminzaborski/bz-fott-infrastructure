@@ -73,6 +73,11 @@ resource registrAppService 'Microsoft.Web/sites@2022-03-01' = {
     enabled: true
     serverFarmId: registrAppPlan.id
     siteConfig: {
+      cors: {
+        allowedOrigins: [
+          '*'
+        ]
+      }
       vnetRouteAllEnabled: true
       alwaysOn: appServicesSku[environment].name == 'F1' ? false : true
       linuxFxVersion: 'DOTNETCORE|7.0'
@@ -126,6 +131,11 @@ resource registrFuncApp 'Microsoft.Web/sites@2022-03-01' = {
   properties: {
     serverFarmId: registrSrvLessAppPlan.id
     siteConfig: {
+      cors: {
+        allowedOrigins: [
+          '*'
+        ]
+      }
       appSettings: [
         {
           name: 'APPINSIGHTS_INSTRUMENTATIONKEY'
