@@ -15,7 +15,7 @@ param createdBy string
 resource contributorRoleDefinition 'Microsoft.Authorization/roleDefinitions@2018-01-01-preview' existing = {
   scope: subscription()
   // This is the Storage Account Contributor role, which is the minimum role permission we can give. See https://docs.microsoft.com/en-us/azure/role-based-access-control/built-in-roles#:~:text=17d1049b-9a84-46fb-8f53-869881c3d3ab
-  name: '17d1049b-9a84-46fb-8f53-869881c3d3ab'
+  name: '86e8f5dc-a6e9-4c67-9d15-de283e8eac25'
 }
 
 resource storageAccount 'Microsoft.Storage/storageAccounts@2022-09-01' = {
