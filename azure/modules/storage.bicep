@@ -15,7 +15,7 @@ param createdBy string
 resource contributorRoleDefinition 'Microsoft.Authorization/roleDefinitions@2022-04-01' existing = {
   scope: subscription()
   // This is the Storage Account Contributor role, which is the minimum role permission we can give. See https://docs.microsoft.com/en-us/azure/role-based-access-control/built-in-roles#:~:text=17d1049b-9a84-46fb-8f53-869881c3d3ab
-  name: '86e8f5dc-a6e9-4c67-9d15-de283e8eac25'
+  name: '17d1049b-9a84-46fb-8f53-869881c3d3ab'
 }
 
 resource storageAccount 'Microsoft.Storage/storageAccounts@2023-01-01' = {
@@ -47,7 +47,7 @@ resource roleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
 }
 
 
-resource deploymentScript 'Microsoft.Resources/deploymentScripts@2020-10-01' = {
+resource deploymentScript 'Microsoft.Resources/deploymentScripts@2023-08-01' = {
   name: 'deploymentScript'
   location: location
   kind: 'AzurePowerShell'
