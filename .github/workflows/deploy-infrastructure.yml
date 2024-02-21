@@ -9,7 +9,7 @@ on:
         default: 'dev'
 
 jobs:
-  build-and-deploy:
+  deploy-azure-infra:
     runs-on: ubuntu-latest
     steps:
 
