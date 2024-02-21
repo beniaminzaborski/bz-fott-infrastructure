@@ -92,7 +92,7 @@ resource deploymentScript 'Microsoft.Resources/deploymentScripts@2023-08-01' = {
 resource kvStorageAccountConnString 'Microsoft.KeyVault/vaults/secrets@2023-07-01' = {
   name: 'kv-${projectName}-${environment}-${shortLocation}/ConnectionString-Fott-StorageAccount'
   properties: {
-    value: 'DefaultEndpointsProtocol=https;AccountName=${storageAccount.name};EndpointSuffix=${az.environment().suffixes.storage};AccountKey=${listKeys(storageAccount.id, storageAccount.apiVersion).keys[0].value}'
+    value: 'DefaultEndpointsProtocol=https;AccountName=${storageAccount.name};EndpointSuffix=${az.environment().suffixes.storage};AccountKey=${storageAccount.listKeys().keys[0].value}'
   }
 }
 

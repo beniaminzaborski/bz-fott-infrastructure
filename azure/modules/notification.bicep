@@ -43,7 +43,7 @@ resource signalR 'Microsoft.SignalRService/signalR@2022-02-01' = {
 resource kvSignalRConnString 'Microsoft.KeyVault/vaults/secrets@2022-07-01' = {
   name: 'kv-${projectName}-${environment}-${shortLocation}/ConnectionString-Fott-SignalR'
   properties: {
-    value: listKeys(signalR.name, signalR.apiVersion).primaryConnectionString
+    value: signalR.listKeys().primaryConnectionString
   }
 }
 

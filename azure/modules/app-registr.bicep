@@ -144,7 +144,7 @@ resource registrFuncApp 'Microsoft.Web/sites@2022-03-01' = {
         {
           name: 'AzureWebJobsStorage'
           //value: '@Microsoft.KeyVault(SecretUri=${storageAccountSecretUri})'
-          value: 'DefaultEndpointsProtocol=https;AccountName=${storageAccountRegistrFuncApp.name};EndpointSuffix=${az.environment().suffixes.storage};AccountKey=${listKeys(storageAccountRegistrFuncApp.id, storageAccountRegistrFuncApp.apiVersion).keys[0].value}'
+          value: 'DefaultEndpointsProtocol=https;AccountName=${storageAccountRegistrFuncApp.name};EndpointSuffix=${az.environment().suffixes.storage};AccountKey=${storageAccountRegistrFuncApp.listKeys().keys[0].value}'
         }
         {
           name: 'FUNCTIONS_EXTENSION_VERSION'

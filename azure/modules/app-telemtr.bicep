@@ -23,10 +23,6 @@ param eventHubSecretUri string
 @secure()
 param serviceBusSecretUri string
 
-@secure()
-param signalrSecretUri string
-
-
 resource telemtrSrvLessAppPlan 'Microsoft.Web/serverfarms@2022-03-01' = {
   name: 'plan-${projectName}-sltelemtr-${environment}-${shortLocation}'
   location: location
@@ -76,7 +72,7 @@ resource telemtrFuncApp 'Microsoft.Web/sites@2022-03-01' = {
         {
           name: 'AzureWebJobsStorage'
           //value: '@Microsoft.KeyVault(SecretUri=${storageAccountSecretUri})'
-          value: 'DefaultEndpointsProtocol=https;AccountName=${storageAccountTelemtrFuncApp.name};EndpointSuffix=${az.environment().suffixes.storage};AccountKey=${listKeys(storageAccountTelemtrFuncApp.id, storageAccountTelemtrFuncApp.apiVersion).keys[0].value}'
+          value: 'DefaultEndpointsProtocol=https;AccountName=${storageAccountTelemtrFuncApp.name};EndpointSuffix=${az.environment().suffixes.storage};AccountKey=${storageAccountTelemtrFuncApp.listKeys().keys[0].value}'
         }
         {
           name: 'FUNCTIONS_EXTENSION_VERSION'

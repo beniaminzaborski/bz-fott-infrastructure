@@ -178,7 +178,6 @@ module appTelemtr 'modules/app-telemtr.bicep' = {
     telemtrDbSecretUri: databases.outputs.telemtrDbSecretUri
     eventHubSecretUri: messaging.outputs.eventHubSecretUri
     serviceBusSecretUri: messaging.outputs.serviceBusSecretUri
-    signalrSecretUri: notification.outputs.signalrSecretUri
   }
   dependsOn: [
     vaults
