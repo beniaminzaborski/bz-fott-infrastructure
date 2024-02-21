@@ -12,7 +12,7 @@ param environment string
 @minLength(2)
 param createdBy string
 
-resource keyVault 'Microsoft.KeyVault/vaults@2022-07-01' = {
+resource keyVault 'Microsoft.KeyVault/vaults@2023-07-01' = {
   name: 'kv-${projectName}-${environment}-${shortLocation}'
   location: location
   tags: {

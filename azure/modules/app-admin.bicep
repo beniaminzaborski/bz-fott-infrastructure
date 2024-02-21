@@ -24,7 +24,7 @@ param serviceBusSecretUri string
 @description('App plan SKU')
 param appServicesSku object
 
-resource adminAppPlan 'Microsoft.Web/serverfarms@2022-03-01' = {
+resource adminAppPlan 'Microsoft.Web/serverfarms@2023-01-01' = {
   name: 'plan-${projectName}-admin-${environment}-${shortLocation}'
   location: location
   sku: {
@@ -40,7 +40,7 @@ resource adminAppPlan 'Microsoft.Web/serverfarms@2022-03-01' = {
   kind: 'linux'
 }
 
-resource adminAppService 'Microsoft.Web/sites@2022-03-01' = {
+resource adminAppService 'Microsoft.Web/sites@2023-01-01' = {
   name: 'app-${projectName}-admin-${environment}-${shortLocation}'
   location: location
   identity: {
@@ -85,7 +85,7 @@ resource adminAppService 'Microsoft.Web/sites@2022-03-01' = {
   }
 }
 
-resource vaultAccessPolicy 'Microsoft.KeyVault/vaults/accessPolicies@2022-07-01' = {
+resource vaultAccessPolicy 'Microsoft.KeyVault/vaults/accessPolicies@2023-07-01' = {
   name: 'kv-${projectName}-${environment}-${shortLocation}/add'
   properties: {
     accessPolicies: [

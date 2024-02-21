@@ -12,7 +12,7 @@ param environment string
 @minLength(2)
 param createdBy string
 
-resource signalR 'Microsoft.SignalRService/signalR@2022-02-01' = {
+resource signalR 'Microsoft.SignalRService/signalR@2023-02-01' = {
   name: 'sigr-${projectName}-${environment}-${shortLocation}'
   location: location
   sku: {
@@ -40,10 +40,10 @@ resource signalR 'Microsoft.SignalRService/signalR@2022-02-01' = {
   }
 }
 
-resource kvSignalRConnString 'Microsoft.KeyVault/vaults/secrets@2022-07-01' = {
+resource kvSignalRConnString 'Microsoft.KeyVault/vaults/secrets@2023-07-01' = {
   name: 'kv-${projectName}-${environment}-${shortLocation}/ConnectionString-Fott-SignalR'
   properties: {
-    value: listKeys(signalR.name, signalR.apiVersion).primaryConnectionString
+    value: signalR.listKeys().primaryConnectionString
   }
 }
 
