@@ -27,7 +27,7 @@ param serviceBusSecretUri string
 param signalrSecretUri string
 
 
-resource telemtrSrvLessAppPlan 'Microsoft.Web/serverfarms@2023-01-01' = {
+resource telemtrSrvLessAppPlan 'Microsoft.Web/serverfarms@2022-03-01' = {
   name: 'plan-${projectName}-sltelemtr-${environment}-${shortLocation}'
   location: location
   kind: 'functionapp'
@@ -45,7 +45,7 @@ resource telemtrSrvLessAppPlan 'Microsoft.Web/serverfarms@2023-01-01' = {
 }
 
 // Dedicated Strorage Account for Azure Function App
-resource storageAccountTelemtrFuncApp 'Microsoft.Storage/storageAccounts@2023-01-01' = {
+resource storageAccountTelemtrFuncApp 'Microsoft.Storage/storageAccounts@2022-09-01' = {
   name: 'st${projectName}ftelemtr${environment}${shortLocation}'
   location: location
   kind: 'Storage'
@@ -58,7 +58,7 @@ resource storageAccountTelemtrFuncApp 'Microsoft.Storage/storageAccounts@2023-01
   }
 }
 
-resource telemtrFuncApp 'Microsoft.Web/sites@2023-01-01' = {
+resource telemtrFuncApp 'Microsoft.Web/sites@2022-03-01' = {
   name: 'func-${projectName}-telemtr-${environment}-${shortLocation}'
   location: location
   kind: 'functionapp'
@@ -107,7 +107,7 @@ resource telemtrFuncApp 'Microsoft.Web/sites@2023-01-01' = {
   }
 }
 
-resource vaultAccessPolicy 'Microsoft.KeyVault/vaults/accessPolicies@2023-07-01' = {
+resource vaultAccessPolicy 'Microsoft.KeyVault/vaults/accessPolicies@2022-07-01' = {
   name: 'kv-${projectName}-${environment}-${shortLocation}/add'
   properties: {
     accessPolicies: [

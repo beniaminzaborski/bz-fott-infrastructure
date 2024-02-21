@@ -244,7 +244,7 @@ output serviceBusSecretUri string = kvServiceBusConnString.properties.secretUri
 
 
 /* Event Hubs */
-resource eventHubNamespace 'Microsoft.EventHub/namespaces@2024-01-01' = {
+resource eventHubNamespace 'Microsoft.EventHub/namespaces@2021-11-01' = {
   name: 'evhns-${projectName}-${environment}-${shortLocation}'
   location: location
   sku: {
@@ -262,7 +262,7 @@ resource eventHubNamespace 'Microsoft.EventHub/namespaces@2024-01-01' = {
   }
 }
 
-resource eventHub 'Microsoft.EventHub/namespaces/eventhubs@2024-01-01' = {
+resource eventHub 'Microsoft.EventHub/namespaces/eventhubs@2021-11-01' = {
   parent: eventHubNamespace
   name: 'evh-${projectName}-${environment}-${shortLocation}'
   properties: {
@@ -274,7 +274,7 @@ resource eventHub 'Microsoft.EventHub/namespaces/eventhubs@2024-01-01' = {
 var eventHubNamespaceAuthRuleEndpoint = '${eventHubNamespace.id}/AuthorizationRules/RootManageSharedAccessKey'
 var eventHubConnString = listKeys(eventHubNamespaceAuthRuleEndpoint, eventHubNamespace.apiVersion).primaryConnectionString
 
-resource kvEventHubConnString 'Microsoft.KeyVault/vaults/secrets@2023-07-01' = {
+resource kvEventHubConnString 'Microsoft.KeyVault/vaults/secrets@2019-09-01' = {
   name: 'kv-${projectName}-${environment}-${shortLocation}/ConnectionString-Fott-EventHub'
   properties: {
     value: eventHubConnString

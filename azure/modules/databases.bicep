@@ -67,7 +67,7 @@ resource psqlDB 'Microsoft.DBforPostgreSQL/servers/databases@2017-12-01' = [for 
 }]
 
 // Put Postgres database connection strings into Key Vault in the loop one by one
-resource psqlDBConnString 'Microsoft.KeyVault/vaults/secrets@2023-07-01' = [for sqlDbName in sqlDatabaseNames: {
+resource psqlDBConnString 'Microsoft.KeyVault/vaults/secrets@2022-07-01' = [for sqlDbName in sqlDatabaseNames: {
   name: 'kv-${projectName}-${environment}-${shortLocation}/ConnectionString-${sqlDbName}-Postgres'
   properties: {
     value: 'Server=${postgres.name}.postgres.database.azure.com;Database=${sqlDbName};Port=5432;Ssl Mode=Require;Trust Server Certificate=true;User Id=${dbAdminLogin}@${postgres.name};Password=${dbAdminPassword};'
@@ -91,7 +91,7 @@ var locations = [
   }
 ]
 
-resource cosmosDbAccount 'Microsoft.DocumentDB/databaseAccounts@2023-11-15' = {
+resource cosmosDbAccount 'Microsoft.DocumentDB/databaseAccounts@2022-08-15' = {
   name: 'cosacc-${projectName}-${environment}-${shortLocation}'
   kind: 'GlobalDocumentDB'
   location: location
@@ -103,7 +103,7 @@ resource cosmosDbAccount 'Microsoft.DocumentDB/databaseAccounts@2023-11-15' = {
   }
 }
 
-resource cosmosDb 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases@2023-11-15' = {
+resource cosmosDb 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases@2022-08-15' = {
   name: 'fott_telemetry'
   parent: cosmosDbAccount
   properties: {
@@ -116,7 +116,7 @@ resource cosmosDb 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases@2023-11-15
   }
 }
 
-resource  competitorsContainer 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers@2023-11-15' = {
+resource  competitorsContainer 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers@2022-08-15' = {
   parent: cosmosDb
   name: competitorsContainerName
   properties: {
@@ -145,7 +145,7 @@ resource  competitorsContainer 'Microsoft.DocumentDB/databaseAccounts/sqlDatabas
   }
 }
 
-resource checkpointsContainer 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers@2023-11-15' = {
+resource checkpointsContainer 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers@2022-08-15' = {
   parent: cosmosDb
   name: checkpointsContainerName
   properties: {
@@ -174,7 +174,7 @@ resource checkpointsContainer 'Microsoft.DocumentDB/databaseAccounts/sqlDatabase
   }
 }
 
-resource laptimeContainer 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers@2023-11-15' = {
+resource laptimeContainer 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers@2022-08-15' = {
   parent: cosmosDb
   name: laptimeContainerName
   properties: {
@@ -203,7 +203,7 @@ resource laptimeContainer 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases/co
   }
 }
 
-resource kvTelemtrDbComosConnString 'Microsoft.KeyVault/vaults/secrets@2023-07-01' = {
+resource kvTelemtrDbComosConnString 'Microsoft.KeyVault/vaults/secrets@2022-07-01' = {
   name: 'kv-${projectName}-${environment}-${shortLocation}/ConnectionString-Fott-Telemetry-Cosmos'
   properties: {
     value: cosmosDbAccount.listConnectionStrings().connectionStrings[0].connectionString

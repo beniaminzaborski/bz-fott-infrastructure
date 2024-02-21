@@ -29,7 +29,7 @@ param signalrSecretUri string
 @description('App plan SKU')
 param appServicesSku object
 
-resource registrAppPlan 'Microsoft.Web/serverfarms@2023-01-01' = {
+resource registrAppPlan 'Microsoft.Web/serverfarms@2022-03-01' = {
   name: 'plan-${projectName}-registr-${environment}-${shortLocation}'
   location: location
   sku: {
@@ -45,7 +45,7 @@ resource registrAppPlan 'Microsoft.Web/serverfarms@2023-01-01' = {
   kind: 'linux'
 }
 
-resource registrSrvLessAppPlan 'Microsoft.Web/serverfarms@2023-01-01' = {
+resource registrSrvLessAppPlan 'Microsoft.Web/serverfarms@2022-03-01' = {
   name: 'plan-${projectName}-slregistr-${environment}-${shortLocation}'
   location: location
   kind: 'functionapp'
@@ -62,7 +62,7 @@ resource registrSrvLessAppPlan 'Microsoft.Web/serverfarms@2023-01-01' = {
   }
 }
 
-resource registrAppService 'Microsoft.Web/sites@2023-01-01' = {
+resource registrAppService 'Microsoft.Web/sites@2022-03-01' = {
   name: 'app-${projectName}-registr-${environment}-${shortLocation}'
   location: location
   identity: {
@@ -108,7 +108,7 @@ resource registrAppService 'Microsoft.Web/sites@2023-01-01' = {
 }
 
 // Dedicated Strorage Account for Azure Function App
-resource storageAccountRegistrFuncApp 'Microsoft.Storage/storageAccounts@2023-01-01' = {
+resource storageAccountRegistrFuncApp 'Microsoft.Storage/storageAccounts@2022-09-01' = {
   name: 'st${projectName}fregistr${environment}${shortLocation}'
   location: location
   kind: 'Storage'
@@ -175,7 +175,7 @@ resource registrFuncApp 'Microsoft.Web/sites@2022-03-01' = {
   }
 }
 
-resource vaultAccessPolicy 'Microsoft.KeyVault/vaults/accessPolicies@2023-07-01' = {
+resource vaultAccessPolicy 'Microsoft.KeyVault/vaults/accessPolicies@2022-07-01' = {
   name: 'kv-${projectName}-${environment}-${shortLocation}/add'
   properties: {
     accessPolicies: [

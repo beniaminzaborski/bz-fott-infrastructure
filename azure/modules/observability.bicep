@@ -27,7 +27,7 @@ resource applicationInsights 'Microsoft.Insights/components@2020-02-02' = {
   }
 }
 
-resource kvAppInsightsConnString 'Microsoft.KeyVault/vaults/secrets@2023-07-01' = {
+resource kvAppInsightsConnString 'Microsoft.KeyVault/vaults/secrets@2022-07-01' = {
   name: 'kv-${projectName}-${environment}-${shortLocation}/ConnectionString-Fott-AppInsights'
   properties: {
     value: applicationInsights.properties.ConnectionString
