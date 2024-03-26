@@ -30,12 +30,12 @@ var sqlDatabaseNames = [
 ]
 
 /* PostgreSQL */
-resource postgres 'Microsoft.DBforPostgreSQL/flexibleServers@2022-12-01' = {
+resource postgres 'Microsoft.DBforPostgreSQL/servers@2017-12-01' = {
   name: 'psql-${projectName}-${environment}-${shortLocation}'
   location: location
   sku: {
-    name: 'Standard_D4ds_v4'
-    tier: 'GeneralPurpose'
+    name: 'B_Gen5_1'
+    tier: 'Basic'
   }
   tags: {
     environment: environment
@@ -45,15 +45,13 @@ resource postgres 'Microsoft.DBforPostgreSQL/flexibleServers@2022-12-01' = {
     administratorLogin: dbAdminLogin
     administratorLoginPassword: dbAdminPassword
     createMode: 'Default'
-    version: '14'
-    backup: {
-      backupRetentionDays: 7
-      geoRedundantBackup: 'Disabled'
-    }
+    version: '11'
+    sslEnforcement: 'Enabled'
+    publicNetworkAccess: 'Enabled'
   }
 }
 
-resource postgresFirewallRules 'Microsoft.DBforPostgreSQL/flexibleServers/firewallRules@2022-12-01' = {
+resource postgresFirewallRules 'Microsoft.DBforPostgreSQL/servers/firewallRules@2017-12-01' = {
   name: 'AllowAllWindowsAzureIps'
   parent: postgres
   properties: {
@@ -63,7 +61,7 @@ resource postgresFirewallRules 'Microsoft.DBforPostgreSQL/flexibleServers/firewa
 }
 
 // Create Postgres databases in the loop one by one
-resource psqlDB 'Microsoft.DBforPostgreSQL/flexibleServers/databases@2022-12-01' = [for sqlDbName in sqlDatabaseNames: {
+resource psqlDB 'Microsoft.DBforPostgreSQL/servers/databases@2017-12-01' = [for sqlDbName in sqlDatabaseNames: {
   name: sqlDbName
   parent: postgres
 }]
