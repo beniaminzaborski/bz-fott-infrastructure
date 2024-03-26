@@ -35,7 +35,7 @@ resource postgres 'Microsoft.DBforPostgreSQL/flexibleServers@2022-12-01' = {
   location: location
   sku: {
     name: 'B_Gen5_1'
-    tier: 'Basic'
+    tier: 'GeneralPurpose'
   }
   tags: {
     environment: environment
