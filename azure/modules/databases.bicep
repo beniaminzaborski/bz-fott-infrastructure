@@ -80,15 +80,15 @@ output registrDbSecretUri string = psqlDBConnString[1].properties.secretUri
 /* CosmosDB */
 var locations = [
   {
-    locationName: location
+    locationName: 'polandcentral'
     failoverPriority: 0
     isZoneRedundant: false
   }
-  {
-    locationName: secondaryRegion
-    failoverPriority: 1
-    isZoneRedundant: false
-  }
+  // {
+  //   locationName: secondaryRegion
+  //   failoverPriority: 1
+  //   isZoneRedundant: false
+  // }
 ]
 
 resource cosmosDbAccount 'Microsoft.DocumentDB/databaseAccounts@2022-08-15' = {
